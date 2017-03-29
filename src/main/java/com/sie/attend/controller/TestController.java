@@ -6,13 +6,12 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sie.attend.common.bo.CommonBO;
-import com.sie.attend.pojo.User;
 
 @RestController
 @RequestMapping("/test")
@@ -22,13 +21,22 @@ public class TestController {
 	
 	@RequestMapping(value = { "/find/{id}" }, method = {
 			org.springframework.web.bind.annotation.RequestMethod.GET }, produces = { "application/json" })
-	public String find(@PathVariable("id") String id) {
+	@ResponseBody
+	public Map<String,Object> find(@PathVariable("id") String id) {
 		System.out.println(id);
 		Map<String, Object> m = new HashMap<String, Object>();
 		m.put("id",  id);
-		User user = this.commonBo.selectUser("com.sie.attend.pojo.userMapper.selectUser", m);
-		System.out.println(user);
-		return "test";
+		System.out.println(this.commonBo.selectUser("com.sie.attend.pojo.userMapper.selectUser", m));
+		return this.commonBo.selectUser("com.sie.attend.pojo.userMapper.selectUser", m);
+	}
+	
+	@RequestMapping("/map/{id}")
+	@ResponseBody
+	public Map<String,Object> test(@PathVariable Integer id){
+		System.out.println(id);
+		Map<String,Object> m = new HashMap<String,Object>();
+		m.put("id", id);
+		return this.commonBo.selectUser("com.sie.attend.pojo.userMapper.selectUser", m);
 	}
 	
 	@RequestMapping("tologin")

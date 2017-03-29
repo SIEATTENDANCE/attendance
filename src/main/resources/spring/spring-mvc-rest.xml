@@ -10,9 +10,35 @@
 	<!-- 扫描该包下的注解 -->
     <context:component-scan base-package="com.sie.attend.controller" />
     
-    <!-- 视图解析器 -->
+    <!-- 视图解析器-->
     <bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
     	<property name="prefix" value="/WEB-INF/jsp/" />
     	<property name="suffix" value=".jsp"></property>
-    </bean>
+    </bean> 
+    <!-- 配置json转换器 -->
+	<!--处理直接返回json格式字符串 -->
+	<bean id="stringConverter"
+		class="org.springframework.http.converter.StringHttpMessageConverter">
+		<property name="supportedMediaTypes">
+						
+			<list>
+				<value>text/plain;charset=UTF-8</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 处理json -->  
+	<bean id="jsonConverter"
+		class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"></bean>
+	<!-- 启动Spring MVC的注解功能，完成请求和注解POJO的映射--> 
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<ref bean="stringConverter" />
+				<ref bean="jsonConverter" />
+			</list>
+		</property>
+	</bean>
+    
 </beans>

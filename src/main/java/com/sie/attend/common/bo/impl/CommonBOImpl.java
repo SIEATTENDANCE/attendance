@@ -13,7 +13,7 @@ public class CommonBOImpl implements CommonBO {
 	private CommonDAO commonDao;
 
 	@Override
-	public User selectUser(String sqlId, Map<String, Object> params) {
+	public Map<String,Object> selectUser(String sqlId, Map<String, Object> params) {
 		return this.commonDao.getSession().selectOne(sqlId, params);
 	}
 
