@@ -21,7 +21,6 @@ public class TestController {
 	
 	@RequestMapping(value = { "/find/{id}" }, method = {
 			org.springframework.web.bind.annotation.RequestMethod.GET }, produces = { "application/json" })
-	@ResponseBody
 	public Map<String,Object> find(@PathVariable("id") String id) {
 		System.out.println(id);
 		Map<String, Object> m = new HashMap<String, Object>();
@@ -31,7 +30,6 @@ public class TestController {
 	}
 	
 	@RequestMapping("/map/{id}")
-	@ResponseBody
 	public Map<String,Object> test(@PathVariable Integer id){
 		System.out.println(id);
 		Map<String,Object> m = new HashMap<String,Object>();

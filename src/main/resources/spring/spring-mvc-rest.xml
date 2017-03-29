@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
-    	 http://www.springframework.org/schema/beans/spring-beans.xsd
-     	 http://www.springframework.org/schema/context
-         http://www.springframework.org/schema/context/spring-context.xsd">
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    	 http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+     	 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+         http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
 	<!-- 扫描该包下的注解 -->
     <context:component-scan base-package="com.sie.attend.controller" />
@@ -27,18 +31,11 @@
 		</property>
 	</bean>
 	
-	<!-- 处理json -->  
-	<bean id="jsonConverter"
-		class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"></bean>
-	<!-- 启动Spring MVC的注解功能，完成请求和注解POJO的映射--> 
-	<bean
-		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
-		<property name="messageConverters">
-			<list>
-				<ref bean="stringConverter" />
-				<ref bean="jsonConverter" />
-			</list>
-		</property>
-	</bean>
-    
+	<!-- 自动扫描且只扫描@RestController -->
+	<context:component-scan base-package="com.sie.*">
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+
+	<mvc:annotation-driven></mvc:annotation-driven>
 </beans>
