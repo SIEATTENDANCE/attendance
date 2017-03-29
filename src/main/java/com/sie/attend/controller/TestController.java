@@ -28,4 +28,10 @@ public class TestController {
 		System.out.println(user);
 		return "test";
 	}
+	
+	@RequestMapping("test1")
+	public String test(Integer id){
+		System.out.println(id);
+		return "test";
+	}
 }
