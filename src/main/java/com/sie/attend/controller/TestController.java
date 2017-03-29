@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,9 +31,20 @@ public class TestController {
 		return "test";
 	}
 	
-	@RequestMapping("test1")
-	public String test(Integer id){
-		System.out.println(id);
-		return "test";
+	@RequestMapping("tologin")
+	public String test(){
+		System.out.println("登录页面");
+		return "forward:/WEB-INF/html/login.html";
+	}
+	
+	@RequestMapping("login")
+	public String login(HttpServletRequest request){
+		System.out.println("1111111");
+		String name = request.getParameter("name");
+		String pwd = request.getParameter("pwd");
+		if("test".equals(name) && "test".equals(pwd)){
+			return "forward:/WEB-INF/html/success.html";
+		}
+		return "forward:/WEB-INF/html/login.html";
 	}
 }
