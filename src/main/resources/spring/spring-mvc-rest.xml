@@ -19,23 +19,11 @@
     	<property name="prefix" value="/WEB-INF/jsp/" />
     	<property name="suffix" value=".jsp"></property>
     </bean> 
-    <!-- 配置json转换器 -->
-	<!--处理直接返回json格式字符串 -->
-	<bean id="stringConverter"
-		class="org.springframework.http.converter.StringHttpMessageConverter">
-		<property name="supportedMediaTypes">
-						
-			<list>
-				<value>text/plain;charset=UTF-8</value>
-			</list>
-		</property>
-	</bean>
 	
 	<!-- 自动扫描且只扫描@RestController -->
-	<context:component-scan base-package="com.sie.*">
+	<context:component-scan base-package="com.sie.attend.controller.*">
 		<context:include-filter type="annotation"
 			expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
-
 	<mvc:annotation-driven></mvc:annotation-driven>
 </beans>
