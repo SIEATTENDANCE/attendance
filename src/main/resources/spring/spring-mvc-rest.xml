@@ -16,8 +16,8 @@
     
     <!-- 视图解析器-->
     <bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-    	<property name="prefix" value="/WEB-INF/jsp/" />
-    	<property name="suffix" value=".jsp"></property>
+    	<property name="prefix" value="/WEB-INF/html/" />
+    	<property name="suffix" value=".html"></property>
     </bean> 
 	
 	<!-- 自动扫描且只扫描@RestController -->

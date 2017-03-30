@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.sie.attend.common.bo.CommonBO;
 
@@ -37,10 +38,21 @@ public class TestController {
 		return this.commonBo.selectUser("com.sie.attend.pojo.userMapper.selectUser", m);
 	}
 	
+	/*
+	 * 使用restController后无法使用视图解析器，所以页面无法跳转，直接显示字符串
+	 */
 	@RequestMapping("tologin")
 	public String test(){
+		System.out.println("测试页面跳转");
+		return "login";
+	}
+	
+	//测试页面跳转
+	@RequestMapping("toTest")
+	public ModelAndView test1(){
+		ModelAndView mv = new ModelAndView("login");
 		System.out.println("登录页面");
-		return "forward:/WEB-INF/html/login.html";
+		return mv;
 	}
 	
 	@RequestMapping("login")
