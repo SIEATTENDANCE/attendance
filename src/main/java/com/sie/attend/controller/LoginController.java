@@ -2,6 +2,7 @@ package com.sie.attend.controller;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,6 +15,7 @@ public class LoginController {
 	
 	@Resource
 	private CommonBO commonBO;
+	
 
 	@RequestMapping(value="login",method=RequestMethod.POST)
 	public int verify(HttpServletRequest request){
@@ -23,6 +25,8 @@ public class LoginController {
 			return 0;
 		}
 		if("test".equals(name) && "test".equals(pwd)){
+			HttpSession session = request.getSession();
+			session.setAttribute("username", name);
 			return 1;
 		}
 		return 2;
