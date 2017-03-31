@@ -17,26 +17,24 @@ import com.sie.attend.common.bo.CommonBO;
 @RequestMapping("/test")
 public class TestController {
 	@Resource
-	private CommonBO commonBo;
+	private CommonBO commonBO;
 	
 	@RequestMapping(value = { "/find/{id}" }, method = {
 			org.springframework.web.bind.annotation.RequestMethod.GET }, produces = { "application/json" })
-	@ResponseBody
 	public Map<String,Object> find(@PathVariable("id") String id) {
 		System.out.println(id);
 		Map<String, Object> m = new HashMap<String, Object>();
 		m.put("id",  id);
-		System.out.println(this.commonBo.selectUser("com.sie.attend.pojo.userMapper.selectUser", m));
-		return this.commonBo.selectUser("com.sie.attend.pojo.userMapper.selectUser", m);
+		System.out.println(this.commonBO.selectUser("com.sie.attend.pojo.userMapper.selectUser", m));
+		return this.commonBO.selectUser("com.sie.attend.pojo.userMapper.selectUser", m);
 	}
 	
 	@RequestMapping("/map/{id}")
-	@ResponseBody
 	public Map<String,Object> test(@PathVariable Integer id){
 		System.out.println(id);
 		Map<String,Object> m = new HashMap<String,Object>();
 		m.put("id", id);
-		return this.commonBo.selectUser("com.sie.attend.pojo.userMapper.selectUser", m);
+		return this.commonBO.selectUser("com.sie.attend.pojo.userMapper.selectUser", m);
 	}
 	
 	@RequestMapping("tologin")

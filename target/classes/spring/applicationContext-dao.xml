@@ -17,6 +17,6 @@
      	 http://www.springframework.org/schema/tx/spring-tx.xsd">
      	 
 	<bean id="commonDao" class="com.sie.attend.common.dao.impl.CommonDAOImpl" />
-	<bean id="commonBo" class="com.sie.attend.common.bo.impl.CommonBOImpl" />
+	<bean id="commonBO" class="com.sie.attend.common.bo.impl.CommonBOImpl" />
 	
 </beans>
