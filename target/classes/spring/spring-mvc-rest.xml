@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
     	 http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -9,18 +8,28 @@
     	 http://www.springframework.org/schema/mvc/spring-mvc.xsd
      	 http://www.springframework.org/schema/context
          http://www.springframework.org/schema/context/spring-context.xsd">
-       
+
 
 	<!-- 扫描该包下的注解 -->
 	<context:component-scan base-package="com.sie.attend.controller" />
 
 	<!-- 自动扫描且只扫描@RestController -->
-	<context:component-scan base-package="com.sie.*">
+	<context:component-scan base-package="com.sie.attend.controller.*">
 		<context:include-filter type="annotation"
 			expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
 
 	<mvc:annotation-driven></mvc:annotation-driven>
+
+	<!-- 拦截器的配置 -->
+	<mvc:interceptors>
+		<!-- 在 mvc:interceptors中可以配置多个拦截器 多个拦截器按顺序一一执行 -->
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<!-- 指定拦截器的位置 -->
+			<bean class="com.sie.attend.interceptor.LoginInterceptor"></bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
 
 
 </beans>

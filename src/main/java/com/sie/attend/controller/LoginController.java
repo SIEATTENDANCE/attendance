@@ -1,5 +1,8 @@
 package com.sie.attend.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -11,24 +14,42 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sie.attend.common.bo.CommonBO;
 
 @RestController
+@RequestMapping("/login")
 public class LoginController {
-	
+
 	@Resource
 	private CommonBO commonBO;
-	
-
-	@RequestMapping(value="login",method=RequestMethod.POST)
-	public int verify(HttpServletRequest request){
-		String name = request.getParameter("name");
-		String pwd = request.getParameter("pwd");
-		if("".equals(name) || name == null || "".equals(pwd) || pwd ==null){
-			return 0;
+	/**
+	 * 验证登录信息
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = { "/verify" }, method = RequestMethod.POST, produces = { "application/json" })
+	public Map<String, Object> verify(HttpServletRequest request) {
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		// 获取页面传回的用户名和密码
+		String user_name = request.getParameter("user_name");
+		String user_pwd = request.getParameter("user_pwd");
+		//判断输入框是否为空
+		if ("".equals(user_name) || user_name == null || "".equals(user_pwd) || user_pwd == null) {
+			returnMap.put("returnMess", -2);
+			return returnMap;//账号或密码没输入
 		}
-		if("test".equals(name) && "test".equals(pwd)){
-			HttpSession session = request.getSession();
-			session.setAttribute("username", name);
-			return 1;
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("emp_id", user_name);
+		map = commonBO.selectOne("com.sie.attend.pojo.EmployeeMapper.selectById", map);
+		if (map == null || map.size() == 0) {
+			returnMap.put("returnMess", 0);
+			return returnMap;//查无此账号
 		}
-		return 2;
+		if (!(map.get("emp_pwd").equals(user_pwd))) {
+			returnMap.put("returnMess", -1);
+			return returnMap;//密码错误
+		}
+		HttpSession session = request.getSession();
+		System.out.println(map.get("emp_id"));
+		session.setAttribute(user_name, map.get("emp_id"));
+		returnMap.put("returnMess", 1);
+		return returnMap;//校验成功
 	}
 }
