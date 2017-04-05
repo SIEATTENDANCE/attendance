@@ -33,7 +33,7 @@ public class TestController {
 	@RequestMapping("tologin")
 	public String test(){
 		System.out.println("登录页面");
-		return "forward:/WEB-INF/html/login.html";
+		return "forward:/html/login.html";
 	}
 	
 	@RequestMapping("login")
