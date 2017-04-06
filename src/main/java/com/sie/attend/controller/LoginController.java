@@ -29,8 +29,25 @@ public class LoginController {
 	public Map<String, Object> verify(HttpServletRequest request) {
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		// 获取页面传回的用户名和密码
+		
 		String emp_id = request.getParameter("emp_id");
 		String user_pwd = request.getParameter("user_pwd");
+		String CheckImg = request.getParameter("CheckImg");
+		
+		
+		String checkCode = request.getParameter("CheckImg");
+		String _checkCode = (String) request.getSession().getAttribute("checkcode_session");
+		System.out.println("requese:"+checkCode);
+		System.out.println("sesion:"+_checkCode);
+		
+		request.getSession().removeAttribute("checkcode_session");//从session中删除。
+		System.out.println(!checkCode.equals(_checkCode));
+		if (!checkCode.equals(_checkCode)) {
+			returnMap.put("returnMess", -3);
+			return returnMap;//查无此账号
+		}
+		
+			
 		//判断输入框是否为空
 		if ("".equals(emp_id) || emp_id == null || "".equals(user_pwd) || user_pwd == null) {
 			returnMap.put("returnMess", -2);
@@ -51,6 +68,7 @@ public class LoginController {
 		System.out.println(map.get("emp_id"));
 		session.setAttribute("user_name", map.get("emp_id"));
 		returnMap.put("returnMess", 1);
+		System.out.println("======");
 		return returnMap;//校验成功
 	}
 }

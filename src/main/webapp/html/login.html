@@ -6,14 +6,20 @@
 
 <link rel="stylesheet" type="text/css" href="../css/login.css">
 
-<script src="https://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js"></script>
+<script
+	src="https://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js"></script>
 <script>
 	$(document).ready(function() {
 		$("#btn").click(function() {
-			$.post("../login/verify.do", {emp_id:$('#emp_id').val(), user_pwd:$("#emp_pwd").val()},
-	          function(data){
-				if(data.returnMess == -2) {
+			$.post("../login/verify.do", {
+				emp_id : $('#emp_id').val(),
+				user_pwd : $("#emp_pwd").val(),
+				CheckImg : $("#randomCode").val()
+			}, function(data) {
+				if (data.returnMess == -2) {
 					$("#errorMessage").text("请输入完整信息");
+				} else if (data.returnMess == -3) {
+					$("#errorMessage").text("验证码错误");
 				} else if (data.returnMess == 0) {
 					$("#errorMessage").text("账号信息错误");
 				} else if (data.returnMess == -1) {
@@ -22,19 +28,40 @@
 					$("#errorMessage").text("成功登录！");
 					window.location.href = "success.html";
 				}
-	          });
+			});
 		});
 	});
+
+	function changeCode() {
+		var imgNode = document.getElementById("vimg");
+		imgNode.src = "../CheckImgServlet?t=" + Math.random();
+
+	}
+	
+
+	
+	
+	
 </script>
 
 </head>
 <body>
 	<div id="login">
 		<h1>Login</h1>
-		<input type="text" placeholder="用户名" id="emp_id"></input>
-		<input type="password" placeholder="密码" id="emp_pwd"></input>
-		<div id="errorMessage" ></div>
+		<input type="text" placeholder="用户名" id="emp_id"></input> <input
+			type="password" placeholder="密码" id="emp_pwd"></input>
+		<div id="errorMessage"></div>
 		<button id="btn" type="submit">登录</button>
+
+
+
+		<input type="text" placeholder="验证码" id="randomCode" /> <span><img
+			id="vimg" title="点击更换" onclick="changeCode();"
+			src="../CheckImgServlet"></span>
+
+
+
+
 	</div>
 </body>
 </html>
