@@ -9,7 +9,7 @@ import com.sie.attend.common.bo.CommonBO;
 import com.sie.attend.common.dao.CommonDAO;
 
 public class CommonBOImpl implements CommonBO {
-	@Resource
+	@Resource(name="commonDao")
 	private CommonDAO commonDao;
 
 	@Override

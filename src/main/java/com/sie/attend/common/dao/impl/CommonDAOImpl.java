@@ -9,7 +9,7 @@ import com.sie.attend.common.dao.CommonDAO;
 
 public class CommonDAOImpl implements CommonDAO {
 
-	@Resource
+	@Resource(name="sqlSessionFactory")
 	private SqlSessionFactory sqlSessionFactory;
 	
 	@Override
