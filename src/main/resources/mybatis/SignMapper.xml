@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sie.data.Sign" >
+
+  
+  <select id="SelectAllSignByUser" resultType="java.util.Map" parameterType="java.util.Map" >	
+	select emp.emp_id empid,emp.emp_name empname,rec.recd_type rectype,
+	rec.date recdate,rec.time rectime,rec.work_state workstate,rec.comefrom recfrom
+	from employee emp,record rec
+	where emp.emp_id=rec.emp_id
+	and emp.emp_id={username}
+	and rec.date between '{datestart}' and '{dateend}'
+	and rec.work_state="{attendstate}"
+	and rec.show="true"	
+	order by rec.date desc
+	
+  </select>
+  
+
+  
+</mapper>
