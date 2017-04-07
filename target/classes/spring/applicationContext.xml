@@ -31,7 +31,6 @@
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"></property>
 		<property name="mapperLocations" value="classpath:mybatis/*.xml"></property>
-		<property name="typeAliasesPackage" value="com.sie.attend.pojo"></property>
 	</bean>
 
 	<bean id="transactionManager"
@@ -72,6 +71,8 @@
 
 	<context:component-scan base-package="com.sie.attend" />
 
+
 	<import resource="classpath:spring/common.xml" />
+  
 
 </beans>

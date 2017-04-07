@@ -1,5 +1,6 @@
 package com.sie.attend.common.bo.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -14,6 +15,11 @@ public class CommonBOImpl implements CommonBO {
 	@Override
 	public Map<String, Object> selectOne(String sqlId, Map<String, Object> params) {
 		return this.commonDao.getSession().selectOne(sqlId, params);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectSignRecord(String sqlId, Map<String, Object> params) {
+		return this.commonDao.getSession().selectList(sqlId, params);
 	}
 
 }
