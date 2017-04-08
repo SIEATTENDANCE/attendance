@@ -1,6 +1,7 @@
 package com.sie.attend.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -32,8 +33,15 @@ public class TestController {
 	
 	@RequestMapping("tologin")
 	public String test(){
-		System.out.println("登录页面");
-		return "forward:/html/login.html";
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("username", "123");
+		params.put("datestart", "2017-04-05");
+		params.put("dateend", "2017-04-08");
+		params.put("attendstate", "normal");
+		List<Map<String, Object>> list = commonBO.selectSignRecord("com.sie.data.Sign.SelectAllSignByUser", params);//查询结果封装到list集合中
+		System.out.println(list);
+		return "forward:/WEB-INF/html/login.html";
 	}
 	
 	@RequestMapping("login")

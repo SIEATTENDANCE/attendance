@@ -46,10 +46,11 @@ public class SignIn {
 		datestart = request.getParameter("startDay");
 		attendstate = request.getParameter("signState");
 		request.getParameter("endDay");
-		
-		//获取用户信息
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession();//获取用户信息
 		String username = (String)session.getAttribute("emp_id");
+		int pageIndex = Integer.parseInt(request.getParameter("pageIndex"));//第几页，从0开始
+		int pageSize =  Integer.parseInt(request.getParameter("pageSize"));//每一页多少数据	
+		
 		
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("username", username);
@@ -61,11 +62,9 @@ public class SignIn {
 		list = this.commonBO.selectSignRecord("com.sie.data.Sign.SelectAllSignByUser", params);//查询结果封装到list集合中
 		
 		//将获取到的list集合里面的数据分页显示
-		
 	    System.out.println(list);	
 
-		int pageIndex = Integer.parseInt(request.getParameter("pageIndex"));//第几页，从0开始
-		int pageSize =  Integer.parseInt(request.getParameter("pageSize"));//每一页多少数据	
+		
 	
 
         
@@ -74,6 +73,49 @@ public class SignIn {
         
 		return mapList;
 	}
+	
+	
+	
+	
+	
+	//签到业务
+	@RequestMapping(value = { "/getUserSignIn" }, method = {
+			RequestMethod.POST }, produces = { "application/json" })
+	
+	public Map<String, Object> getUserSignIn(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		String username = (String)session.getAttribute("userMess");
+		
+		Map<String, Object> resultInt = new HashMap<String, Object>(10);	
+		//获取当天日期和时间，分开
+		SimpleDateFormat dateStyle=new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat TimeStyle=new SimpleDateFormat("HH:mm:ss");
+		String date = dateStyle.format(new Date());
+		String time = TimeStyle.format(new Date());
+		 
+		//判断是否已经签到
+		Map<String, Object> ifSign= new HashMap<>();
+		ifSign.put("username", username);
+		ifSign.put("date", date);
+		
+		return ifSign = this.commonBO.selectIfSign("com.sie.data.Sign.SelectUserIsChangeState", ifSign);
+		
+		
+		
+		
+		
+		
+
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 
 	
 }
