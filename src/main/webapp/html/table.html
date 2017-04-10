@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>测试表格组件</title>
+<link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet"
+	media="screen">
+<!-- 导入日历插件css -->
+<link href="../bootstrap/css/bootstrap-datetimepicker.min.css"
+	rel="stylesheet" media="screen">
+<link href="../bootstrap/css/bootstrap-table.min.css" rel="stylesheet"
+	media="screen">
+
+</head>
+<body>
+	<div class="container">
+		<h3>我的打卡记录</h3>
+		<hr>
+		<button type="button" class="btn btn-primary" id="btn1">签到</button>
+		<button type="button" class="btn btn-primary" id="btn2">签退</button>
+		<br> <label></label>
+		<form class="form-inline">
+			<!-- 起始时间 -->
+			<div class="form-group">
+				<label>日期：</label>
+				<div class="input-group date form_date" data-date=""
+					data-date-format="yyyy-mm-dd">
+					<input class="form-control" id="startDay" size="8" type="text"
+						readonly> <span class="input-group-addon"><span
+						class="glyphicon glyphicon-calendar"></span></span>
+				</div>
+			</div>
+
+			<!-- 结束时间 -->
+			<div class="form-group">
+				<label>&nbsp;至&nbsp;</label>
+				<div class="input-group date form_date" data-date=""
+					data-date-format="yyyy-mm-dd">
+					<input class="form-control" id="endDay" size="8" type="text"
+						readonly> <span class="input-group-addon"><span
+						class="glyphicon glyphicon-calendar"></span></span>
+				</div>
+			</div>
+
+			<!-- 状态 -->
+			<div class="form-group dropdown">
+				<label>&nbsp;状态：</label>
+				<button class="btn btn-default dropdown-toggle" type="button"
+					id="signState" data-toggle="dropdown" aria-haspopup="true"
+					aria-expanded="true">
+					全部 <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" aria-labelledby="signState"
+					id="signStateList">
+					<li><a href="#">出勤</a></li>
+					<li><a href="#">迟到</a></li>
+					<li><a href="#">早退</a></li>
+					<li><a href="#">旷工</a></li>
+					<li><a href="#">异常</a></li>
+				</ul>
+			</div>
+			&nbsp;&nbsp;&nbsp;
+			<button class="btn btn-default" type="submit" id="search">查询</button>
+		</form>
+
+		<table id="cusTable"></table>
+	</div>
+</body>
+<script src="../bootstrap/jquery.min.js"></script>
+<script src="../bootstrap/js/bootstrap.min.js"></script>
+<script src="../bootstrap/js/bootstrap-datetimepicker.min.js"></script>
+<script src="../bootstrap/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="../bootstrap/js/bootstrap-table.min.js"></script>
+<script src="../bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+<script>
+$(document).ready(function() {
+	//初始化查询时间
+	$('#startDay').val(new Date(new Date().getTime() - 604800000).Format("yyyy-MM-dd"));
+	$('#endDay').val(new Date().Format("yyyy-MM-dd"));
+
+	//获取下拉菜单中的内容并显示
+	$('#signStateList li').on('click',function() {
+		$('#signState').html($(this).text() + '<span class="caret"></span>');
+	});
+
+	//对起始时间和截止时间进行限制
+	$("#startDay").change(function() {
+		if ($('#startDay').val() > (new Date().Format("yyyy-MM-dd"))) {
+			alert("起始时间不能超过今天");
+			$('#startDay').val(new Date().Format("yyyy-MM-dd"));
+		}
+	});
+	$("#endDay").change(function() {
+		if ($('#startDay').val() > $('#endDay').val()) {
+			alert("截止时间不能小于起始时间");
+			$('#endDay').val(new Date().Format("yyyy-MM-dd"));
+		}
+	});
+	
+	 //调用函数，初始化表格  
+    initTable();  
+
+    //当点击查询按钮的时候执行  
+    $("#search").bind("click", initTable);  
+});
+
+	//初始化表格
+	function initTable() {
+		//先销毁表格  
+		$('#cusTable').bootstrapTable('destroy');
+		//初始化表格,动态从服务器加载数据  
+		$("#cusTable").bootstrapTable({
+			url : '../signIn/getUserSignRecord', //请求后台的URL
+			method : 'POST', //请求方式
+			contentType:"application/x-www-form-urlencoded; charset=UTF-8",
+			toolbar : "#submit", //工具按钮用哪个容器
+			striped : true, //使表格带有条纹
+			pagination : true, //在表格底部显示分页工具栏
+			pageSize : 5,
+			pageNumber : 1, //默认加载第一页
+			pageList : [ 1, 5, 10, 20 ], //记录数可选列表 
+			search : false, //是否启用查询  
+			showColumns : true, //显示下拉框勾选要显示的列  
+			showRefresh : true, //显示刷新按钮  
+			columns : [ {
+				field : 'empid',
+				title : '工号'
+			}, {
+				field : 'empname',
+				title : '姓名'
+			}, {
+				field : 'rectype',
+				title : '类型'
+			}, {
+				field : 'recdate',
+				title : '日期'
+			}, {
+				field : 'rectime',
+				title : '时间'
+			}, {
+				field : 'workstate',
+				title : '状态'
+			}, {
+				field : 'recfrom',
+				title : '来源'
+			} ],
+			queryParamsType : "undefined",
+			queryParams : function queryParams(params) { //设置查询参数  
+				var param = {
+					startDay : $("#startDay").val(),
+					endDay : $("#endDay").val(),
+					signState : "sign"
+				};
+				return param;
+			}
+			
+		});
+	};
+
+	//日历插件初始化
+	$('.form_date').datetimepicker({
+		language : 'zh-CN',//中文，需要引用zh-CN.js包
+		weekStart : 1,
+		todayBtn : 1,
+		autoclose : 1,
+		todayHighlight : 1,
+		startView : 2,//月视图
+		minView : 2,
+		forceParse : 0
+	});
+
+	//日期格式转换
+	Date.prototype.Format = function(fmt) { //author: meizz   
+		var o = {
+			"M+" : this.getMonth() + 1, //月份   
+			"d+" : this.getDate(), //日   
+		};
+		if (/(y+)/.test(fmt))
+			fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "")
+					.substr(4 - RegExp.$1.length));
+		for ( var k in o)
+			if (new RegExp("(" + k + ")").test(fmt))
+				fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k])
+						: (("00" + o[k]).substr(("" + o[k]).length)));
+		return fmt;
+	}
+</script>
+
+
+</html>
+
+

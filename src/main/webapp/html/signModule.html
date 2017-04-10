@@ -1,63 +1,183 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Insert title here</title>
-<link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
-<script src="../bootstrap/jquery-1.12.4.min.js"></script>
-<script src="../bootstrap/js/bootstrap.min.js"></script>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+<title>签到模块</title>
+
+<!-- Bootstrap -->
+<link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet"  media="screen">
+<!-- 导入日历插件css -->
+<link href="../bootstrap/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+<!-- 导入表格插件css -->
+<link href="../bootstrap/css/bootstrap-table.min.css" rel="stylesheet" media="screen">
+
+<script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+<script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+
 </head>
 <body>
 	<div class="container">
-		<h2>我的打卡记录</h2>
-		<hr />
-		<div>
-			<button id="btn1" class="btn btn-primary" type="button">签到</button>
-			&nbsp;&nbsp;
-			<button id="btn2" class="btn btn-primary" type="button">签退</button>
-		</div>
-		<form class="navbar-form navbar-left" role="search">
+		<h3>我的打卡记录</h3>
+		<hr>
+		<button type="button" class="btn btn-primary" id="btn1">签到</button>
+		<button type="button" class="btn btn-primary" id="btn2">签退</button>
+		<br> <label></label>
+		<form class="form-inline">	
+			<!-- 起始时间 -->
 			<div class="form-group">
-				<input type="text" class="form-control" placeholder="Search">
+				<label>日期：</label> 
+				<div class="input-group date form_date" data-date=""
+					data-date-format="yyyy-mm-dd">
+					<input class="form-control" id="startDay" size="8" type="text" readonly>
+					 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+				</div>
 			</div>
-			<button type="submit" class="btn btn-default">Submit</button>
-
-			<table class="table">
-				<thead>
-					<tr>
-						<th>工号</th>
-						<th>姓名</th>
-						<th>类型</th>
-						<th>日期</th>
-						<th>时间</th>
-						<th>状态</th>
-						<th>来源</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>Tanmay</td>
-						<td>Bangalore</td>
-						<td>Bangalore</td>
-						<td>Bangalore</td>
-						<td>Bangalore</td>
-						<td>Bangalore</td>
-						<td>Bangalore</td>
-					</tr>
-					<tr>
-						<td>Sachin</td>
-						<td>Mumbai</td>
-						<td>Mumbai</td>
-						<td>Mumbai</td>
-						<td>Mumbai</td>
-						<td>Mumbai</td>
-						<td>Mumbai</td>
-					</tr>
-				</tbody>
-			</table>
+			
+			<!-- 结束时间 -->
+			<div class="form-group">
+				<label>&nbsp;至&nbsp;</label> 
+				<div class="input-group date form_date" data-date=""
+					data-date-format="yyyy-mm-dd">
+					<input class="form-control" id="endDay" size="8" type="text" readonly>
+					 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+				</div>
+			</div>
+			
+			<!-- 状态 -->
+			<div class="form-group dropdown">
+				<label>&nbsp;状态：</label>
+				<button class="btn btn-default dropdown-toggle" type="button"
+					id="signState" data-toggle="dropdown" aria-haspopup="true"
+					aria-expanded="true">
+					全部 <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" aria-labelledby="signState"
+					id="signStateList">
+					<li><a href="#">出勤</a></li>
+					<li><a href="#">迟到</a></li>
+					<li><a href="#">早退</a></li>
+					<li><a href="#">旷工</a></li>
+					<li><a href="#">异常</a></li>
+				</ul>
+			</div>
+			&nbsp;&nbsp;&nbsp;
+			<button type="submit" class="btn btn-default" id="submit">查询</button>
 		</form>
+		<div class="row">
+			<div class="col-md-9">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>工号</th>
+							<th>姓名</th>
+							<th>类型</th>
+							<th>日期</th>
+							<th>时间</th>
+							<th>状态</th>
+							<th>来源</th>
+						</tr>
+					</thead>
+					<tbody id="tbody">
+
+					</tbody>
+				</table>
+			</div>
+		</div>
 	</div>
+
 </body>
+
+<script src="../bootstrap/jquery.min.js"></script>
+<script src="../bootstrap/js/bootstrap.min.js"></script>
+<!-- 导入日历插件-->
+<script src="../bootstrap/js/bootstrap-datetimepicker.min.js"></script>
+<script src="../bootstrap/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<!-- 导入表格插件 -->
+<script src="../bootstrap/js/bootstrap-table.min.js"></script>
+<script src="../bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {	
+				
+		//初始化查询时间
+		$('#startDay').val(new Date(new Date().getTime() - 604800000).Format("yyyy-MM-dd"));
+		$('#endDay').val(new Date().Format("yyyy-MM-dd"));
+		
+		//获取下拉菜单中的内容并显示
+		$('#signStateList li').on('click',function() {
+			$('#signState').html(
+					$(this).text() + '<span class="caret"></span>');
+		});
+		
+		//对起始时间和截止时间进行限制
+		$("#startDay").change(function() {
+		  if($('#startDay').val() > (new Date().Format("yyyy-MM-dd"))){
+			  alert("起始时间不能超过今天");
+			  $('#startDay').val(new Date().Format("yyyy-MM-dd"));
+		  }
+		});
+		$("#endDay").change(function() {
+		  if($('#startDay').val() > $('#endDay').val()){
+			  alert("截止时间不能小于起始时间");
+			  $('#endDay').val(new Date().Format("yyyy-MM-dd"));
+		  }
+		});
+
+		//将查询条件传回后台
+		$('#submit').on('click', function() {
+			var startDay = $('#startDay').val();
+			var endDay = $('#endDay').val();
+			var state = $('#signState').text();
+			var signState;
+			switch(state){
+				case '出勤' : signState = 'normal';break;
+				case '迟到' : signState = 'late';break;
+				case '早退' : signState = 'early';break;
+				case '旷工' : signState = 'no';break;
+				case '异常' : signState = 'except';break;
+				default : signState = 'all';break;
+			} 
+
+			$.post("../signIn/getSignRecord", {  "startDay": startDay,"endDay": endDay ,"signState": signState },
+				function(data){
+		          	$.each(data,function(content){
+						alert(content.empid);
+		          	});
+	          }, "json");
+		
+		});
+		
+
+	});
+	
+	//日历插件初始化
+	$('.form_date').datetimepicker({
+        language:  'zh-CN',//中文，需要引用zh-CN.js包
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,//月视图
+		minView: 2,
+		forceParse: 0
+    });
+
+	//日期格式转换
+	Date.prototype.Format = function(fmt) { //author: meizz   
+		var o = {
+			"M+" : this.getMonth() + 1, //月份   
+			"d+" : this.getDate(), //日   
+		};
+		if (/(y+)/.test(fmt))
+			fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "")
+					.substr(4 - RegExp.$1.length));
+		for ( var k in o)
+			if (new RegExp("(" + k + ")").test(fmt))
+				fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k])
+						: (("00" + o[k]).substr(("" + o[k]).length)));
+		return fmt;
+	}
+</script>
 </html>

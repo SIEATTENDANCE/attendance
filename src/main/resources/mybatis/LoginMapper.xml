@@ -4,17 +4,26 @@
 
 <mapper namespace="com.sie.attend.pojo.LoginMapper">
 
-	<select id="selectByPrimaryKey" resultType="Map" parameterType="Map">
-		select * from employee where id=#{id}
-	</select>
-	
 	<select id="selectByEmpId" resultType="Map" parameterType="Map">
-		SELECT * FROM employee WHERE emp_id=#{emp_id}
+		SELECT
+		emp_id,emp_pwd,emp_name,emp_offid
+		FROM employee
+		WHERE
+		emp_id=#{emp_id};
 	</select>
-	
-	<select id="selectByEmpName" resultType="Map" parameterType="Map">
-		SELECT * FROM employee WHERE emp_name=#{empName};
+
+	<select id="selectMenuByEmpId" resultType="Map" parameterType="Map">
+		SELECT
+		menu.id,menu.menuName,menu.parentNode,menu.existModule,menu.rank,menu.url
+		FROM
+		employee emp,emp_role er,role role,menu_role mr,tree_menu menu
+		WHERE
+		emp.id=er.employID
+		AND er.roleID=role.id
+		AND role.id=mr.role_id
+		AND mr.menu_id=menu.id
+		AND emp.emp_id=#{emp_id};
 	</select>
-	
-	
+
+
 </mapper>
