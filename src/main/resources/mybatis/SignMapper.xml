@@ -12,9 +12,9 @@
 		emp.emp_id=rec.emp_id
 		and emp.emp_id=#{username}
 		and rec.date between #{datestart} and #{dateend}
-<!-- 		<if test="attendstate!='all' ">
+		<if test="attendstate!='all' ">
 			and rec.work_state=#{attendstate}
-		</if> -->
+		</if>
 		and rec.show="true"
 		order by rec.date desc
 		limit
@@ -43,18 +43,19 @@
 
 	<insert id="InsertSignMorRecord" parameterType="java.util.Map">
 		insert into
-		'record'(emp_id,date,time,real_time,recd_type,mor_noon,work_state,comefrom,recd_inout)
+		record(emp_id,date,time,real_time,recd_type,mor_noon,work_state,comefrom,recd_inout)
 		values
-		(#{username},#{date},#{time},#{real_time},'sigin',#{mor_noon},#{work_state},#{comefrom},'in')
+		(#{username},#{date},#{time},#{real_time},'signin',#{mor_noon},#{work_state},#{comefrom},'in')
 
 	</insert>
 
 	<insert id="InsertSignNoonRecord" parameterType="java.util.Map">
-		insert into
-		'record'(emp_id,date,recd_type,mor_noon,work_state,recd_inout)
-		values
-		(#{username},#{date},'sigout','noon','except','out')
+	insert into
+	record(emp_id,date,recd_type,mor_noon,work_state,recd_inout)
+	values
+	(#{username},#{date},'signout','noon','except','out')
 	</insert>
+	
 	<update id="updateSignNoonRecord" parameterType="java.util.Map">
 		update record
 		rec

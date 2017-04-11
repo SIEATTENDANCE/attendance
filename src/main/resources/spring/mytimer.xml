@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN"
+ "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+	<!-- 注册定时器 -->
+	<bean id="timer"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="timerTaskTrigger" />
+			</list>
+		</property>
+	</bean>
+	<!-- 指定何时触发定时任务 -->
+	<bean id="timerTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="timerTaskJobDetail" />
+		</property>
+		<property name="cronExpression">
+			<!-- 每天20点-->
+			<value>0 0 20 * *  ?</value>
+		</property>
+	</bean>
+	<!-- 指定定时任务细节 调用哪个类 哪个方法 -->
+	<bean id="timerTaskJobDetail"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="timerTaskInstance" />
+		</property>
+		<property name="targetMethod">
+			<value>tiggertimer</value>
+		</property>
+		<property name="concurrent" value="false" />
+	</bean>
+	<!-- 实例化定时任务类 -->
+	<bean name="timerTaskInstance" class="com.sie.attend.util.SpringTimer" />
+
+</beans> 

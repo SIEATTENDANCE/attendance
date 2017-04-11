@@ -22,9 +22,10 @@ public class CommonBOImpl implements CommonBO {
 		// TODO Auto-generated method stub
 		return this.commonDao.getSession().selectOne(sqlId);
 	}
+	
 
 	@Override
-	public List<Map<String, Object>> selectSignRecord(String sqlId, Map<String, Object> params) {
+	public List<Map<String, String>> selectSignRecord(String sqlId, Map<String, Object> params) {
 		return this.commonDao.getSession().selectList(sqlId, params);
 	}
 
@@ -61,6 +62,12 @@ public class CommonBOImpl implements CommonBO {
 
 	@Override
 	public List<Map<String, Object>> selectList(String sqlId, Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return this.commonDao.getSession().selectList(sqlId, params);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectALL(String sqlId, Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return this.commonDao.getSession().selectList(sqlId, params);
 	}

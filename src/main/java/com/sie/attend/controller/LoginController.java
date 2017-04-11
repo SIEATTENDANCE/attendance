@@ -32,7 +32,7 @@ public class LoginController {
 	@RequestMapping(value = { "/getLoginMess" }, method = 
 			RequestMethod.POST, produces = { "application/json" })
 	public Map<String, Object> getLoginMess(HttpServletRequest request) throws Exception {
-		Map<String, Object> returnMap = new HashMap<String, Object>(2);
+		Map<String, Object> returnMap = new HashMap<String, Object>(5);
 		// 获取页面传回的用户名、密码、验证码
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
@@ -61,6 +61,8 @@ public class LoginController {
 		if (map == null || map.size() == 0) { //判断用户名是否存在
 			returnMap.put("success", "no");
 			returnMap.put("error_msg", "账号不存在");
+			
+			System.out.println("logincontroller:"+returnMap.toString());
 			return returnMap;
 			//throw new CustomException("账户不存在");//抛出全局异常
 		}else{
@@ -70,6 +72,7 @@ public class LoginController {
 					session.setAttribute("emp_id", emp_id);
 					returnMap.put("success", "yes");
 					returnMap.put("emp_id",emp_id);
+					System.out.println("logincontroller:"+returnMap);
 					return returnMap;//校验成功
 				}else{
 					returnMap.put("success", "no");

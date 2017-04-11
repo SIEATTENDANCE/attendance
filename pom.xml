@@ -123,6 +123,7 @@
 			<version>${spring.version}</version>
 		</dependency>
 		<!-- Mybatis -->
+	
 		<dependency>
 			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis</artifactId>
@@ -163,6 +164,13 @@
 			<version>${jsp-api.version}</version>
 			<scope>provided</scope>
 		</dependency>
+		<!-- quartz -->
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>2.2.1</version>
+		</dependency>
+
 		<!-- 文件上传组件 -->
 		<dependency>
 			<groupId>commons-fileupload</groupId>

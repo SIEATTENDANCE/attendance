@@ -8,15 +8,25 @@
 <title>签到模块</title>
 
 <!-- Bootstrap -->
-<link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet"  media="screen">
+<link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet"
+	media="screen">
 <!-- 导入日历插件css -->
-<link href="../bootstrap/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
-<!-- 导入表格插件css -->
-<link href="../bootstrap/css/bootstrap-table.min.css" rel="stylesheet" media="screen">
+<link href="../bootstrap/css/bootstrap-datetimepicker.min.css"
+	rel="stylesheet" media="screen">
 
-<script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
-
+<script src="../common/lib/html5.js"></script>
+<script src="../common/lib/respond.min.js"></script>
+<style type="text/css">
+.search{
+	float : left;
+	padding:10px 5px;
+}
+.search p{
+	padding-top: 3px;
+	font-size: 15px;
+	font-weight:bold;
+}
+</style>
 </head>
 <body>
 	<div class="container">
@@ -24,50 +34,48 @@
 		<hr>
 		<button type="button" class="btn btn-primary" id="btn1">签到</button>
 		<button type="button" class="btn btn-primary" id="btn2">签退</button>
-		<br> <label></label>
-		<form class="form-inline">	
-			<!-- 起始时间 -->
-			<div class="form-group">
-				<label>日期：</label> 
-				<div class="input-group date form_date" data-date=""
-					data-date-format="yyyy-mm-dd">
-					<input class="form-control" id="startDay" size="8" type="text" readonly>
-					 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-				</div>
-			</div>
-			
-			<!-- 结束时间 -->
-			<div class="form-group">
-				<label>&nbsp;至&nbsp;</label> 
-				<div class="input-group date form_date" data-date=""
-					data-date-format="yyyy-mm-dd">
-					<input class="form-control" id="endDay" size="8" type="text" readonly>
-					 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-				</div>
-			</div>
-			
-			<!-- 状态 -->
-			<div class="form-group dropdown">
-				<label>&nbsp;状态：</label>
-				<button class="btn btn-default dropdown-toggle" type="button"
-					id="signState" data-toggle="dropdown" aria-haspopup="true"
-					aria-expanded="true">
-					全部 <span class="caret"></span>
-				</button>
-				<ul class="dropdown-menu" aria-labelledby="signState"
-					id="signStateList">
-					<li><a href="#">出勤</a></li>
-					<li><a href="#">迟到</a></li>
-					<li><a href="#">早退</a></li>
-					<li><a href="#">旷工</a></li>
-					<li><a href="#">异常</a></li>
-				</ul>
-			</div>
-			&nbsp;&nbsp;&nbsp;
+		<br>
+		<!-- 起始时间 -->
+		<div class="search" ><p>日期:</p></div>
+		<div class="input-group date form_date search" data-date=""
+			data-date-format="yyyy-mm-dd" style="width:150px">
+			<input class="form-control" id="startDay" size="8" type="text"
+				readonly> <span class="input-group-addon"><span
+				class="glyphicon glyphicon-calendar"></span></span>
+		</div>
+
+		<!-- 结束时间 -->
+		<div class="search" ><p>至</p></div>
+		<div class="input-group date form_date search" data-date=""
+			data-date-format="yyyy-mm-dd" style="width:150px">
+			<input class="form-control" id="endDay" size="8" type="text"
+				readonly> <span class="input-group-addon"><span
+				class="glyphicon glyphicon-calendar"></span></span>
+		</div>
+
+		<!-- 状态 -->
+		<div class="dropdown search">
+			<label>&nbsp;状态：</label>
+			<button class="btn btn-default dropdown-toggle" type="button"
+				id="signState" data-toggle="dropdown" aria-haspopup="true"
+				aria-expanded="true">
+				全部 <span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu" aria-labelledby="signState"
+				id="signStateList">
+				<li><a href="#">出勤</a></li>
+				<li><a href="#">迟到</a></li>
+				<li><a href="#">早退</a></li>
+				<li><a href="#">旷工</a></li>
+				<li><a href="#">异常</a></li>
+			</ul>
+		</div>
+		<div class="search">
 			<button type="submit" class="btn btn-default" id="submit">查询</button>
-		</form>
+		</div>
+		<!-- 表格 -->
 		<div class="row">
-			<div class="col-md-9">
+			<div class="col-md-9" style="height:300px;border:1px solid black">
 				<table class="table table-striped">
 					<thead>
 						<tr>
@@ -95,9 +103,6 @@
 <!-- 导入日历插件-->
 <script src="../bootstrap/js/bootstrap-datetimepicker.min.js"></script>
 <script src="../bootstrap/js/bootstrap-datetimepicker.zh-CN.js"></script>
-<!-- 导入表格插件 -->
-<script src="../bootstrap/js/bootstrap-table.min.js"></script>
-<script src="../bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {	
 				
@@ -135,20 +140,57 @@
 				case '出勤' : signState = 'normal';break;
 				case '迟到' : signState = 'late';break;
 				case '早退' : signState = 'early';break;
-				case '旷工' : signState = 'no';break;
+				case '旷工' : signState = 'nowork';break;
 				case '异常' : signState = 'except';break;
 				default : signState = 'all';break;
-			} 
-
-			$.post("../signIn/getSignRecord", {  "startDay": startDay,"endDay": endDay ,"signState": signState },
+			};
+			
+			$.post("../signIn/getSignRecord", { 
+				"startDay": startDay,
+				"endDay": endDay ,
+				"signState": signState },
 				function(data){
-		          	$.each(data,function(content){
-						alert(content.empid);
+					var html = "";
+		          	$.each(data,function(i,value){
+		          		if(value.rectype == 'signin'){
+		          			value.rectype = '签到';
+		          		}else{
+		          			value.rectype = '签退';
+		          		}
+		          		if(value.recfrom == 'system'){
+		          			value.recfrom = '系统';
+		          		}else{
+		          			value.recfrom = '打卡机';
+		          		}
+		          		if(value.workstate == 'except'){
+		          			value.rectime = "-";
+		          		}
+		          		switch(value.workstate){
+							case 'normal' : value.workstate = '出勤';break;
+							case 'late' : value.workstate = '迟到';break;
+							case 'early' : value.workstate = '早退';break;
+							case 'nowork' : value.workstate = '旷工';break;
+							case 'except' : value.workstate = '异常';break;
+						}
+		          		html+="<tr><td>"+value.empid+"</td><td>"+value.empname+"</td><td>"+value.rectype+"</td><td>"+value.recdate+"</td><td>"+value.rectime+"</td><td>"+value.workstate+"</td><td>"+value.recfrom+"</td></tr>" 
 		          	});
-	          }, "json");
-		
+		          	$('#tbody').html(html);
+				}, "json"); 
 		});
-		
+		//签到
+		$('#btn1').click(function(){
+			$.post("../signIn/UserSignIn",
+			          function(data){
+						alert(data.result);
+			          }, "json");
+		});
+		//签退
+		$('#btn2').click(function(){
+			$.post("../signIn/UserSignOut",
+			          function(data){
+						alert(data.result);
+			          }, "json");
+		});
 
 	});
 	
