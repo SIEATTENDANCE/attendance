@@ -5,7 +5,7 @@
 
 	<select id="selectException" resultType="Map" parameterType="java.util.Map">
 		select exc.fload_id,exc.ex_createtime,exc.ex_state,exc.ex_dealtime
-		from employee emp,excep_change exc
+		from employee emp,exception exc
 		where emp.emp_id=exc.ex_empid
 		and emp.emp_id=#{username}
 		and exc.ex_createtime between #{showStartTime} and #{showEndTime}

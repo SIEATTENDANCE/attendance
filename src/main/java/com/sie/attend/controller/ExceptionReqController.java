@@ -44,8 +44,7 @@ public class ExceptionReqController {
 		String showEndTime = request.getParameter("showEndTime");//查询异常申请的结束时间
 		String exceptionState = request.getParameter("exceptionState");//要查询的异常状态
 		HttpSession session = request.getSession();// 获取用户信息
-		String username = (String) session.getAttribute("emp_id");
-		
+		String username = (String) session.getAttribute("emp_id");	
 		
 		//测试数据
 /*		String exceptionNum = null;
@@ -53,8 +52,41 @@ public class ExceptionReqController {
 		String showEndTime = "2017-04-18";
 		String exceptionState = "new";
 		String username = "123";*/
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("username", username);
+		params.put("exceptionNum", exceptionNum);
+		params.put("showStartTime", showStartTime);
+		params.put("showEndTime", showEndTime);
+		params.put("exceptionState", exceptionState);		
+		List<Map<String, Object>> exceptionRecord = this.commonBO.selectALL("com.sie.data.ExceptionRequest.selectException",params);// 查询结果封装到list集合中
+		System.out.println("exceptionRecord中的Map"+exceptionRecord);
+		return exceptionRecord;
+	}
+	
+	
+	
+	
+	
+	
+	//添加异常变更申请
+	@RequestMapping(value = { "/addExceptionchange" }, method = { RequestMethod.GET}, produces = { "application/json" })
+	public List<Map<String, Object>> addExceptionchange(HttpServletRequest request) {
+		SimpleDateFormat dateStyle = new SimpleDateFormat("yyyy-MM-dd");
+		String date = dateStyle.format(new Date());
 		
+		String exceptionNum = request.getParameter("exceptionNum");
+		String showStartTime = request.getParameter("showStartTime");
+		String showEndTime = request.getParameter("showEndTime");//查询异常申请的结束时间
+		String exceptionState = request.getParameter("exceptionState");//要查询的异常状态
+		HttpSession session = request.getSession();// 获取用户信息
+		String username = (String) session.getAttribute("emp_id");	
 		
+		//测试数据
+/*		String exceptionNum = null;
+		String showStartTime = "2017-04-07";
+		String showEndTime = "2017-04-18";
+		String exceptionState = "new";
+		String username = "123";*/
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("username", username);
 		params.put("exceptionNum", exceptionNum);

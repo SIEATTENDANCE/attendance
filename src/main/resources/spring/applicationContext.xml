@@ -21,10 +21,27 @@
 
 	<!-- 数据源配置 -->
 	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
-		<property name="driverClassName" value="${driver}" />
-		<property name="url" value="${url}" />
-		<property name="username" value="${username}" />
-		<property name="password" value="${password}" />
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="initialSize" value="${jdbc.pool.initialSize}" />
+		<property name="minIdle" value="${jdbc.pool.minIdle}" />
+		<property name="maxActive" value="${jdbc.pool.maxActive}" />
+		<property name="maxWait" value="${jdbc.pool.maxWait}" />
+		<property name="timeBetweenEvictionRunsMillis"
+			value="${jdbc.pool.timeBetweenEvictionRunsMillis}" />
+		<property name="removeAbandoned" value="${jdbc.pool.removeAbandoned}" />
+		<property name="removeAbandonedTimeout" value="${jdbc.pool.removeAbandonedTimeout}" />
+		<property name="minEvictableIdleTimeMillis" value="${jdbc.pool.minEvictableIdleTimeMillis}" />
+		<property name="validationQuery" value="${jdbc.pool.validationQuery}" />
+		<property name="testWhileIdle" value="${jdbc.pool.testWhileIdle}" />
+		<property name="testOnBorrow" value="${jdbc.pool.testOnBorrow}" />
+		<property name="testOnReturn" value="${jdbc.pool.testOnReturn}" />
+		<property name="poolPreparedStatements" value="${jdbc.pool.poolPreparedStatements}" />
+		<property name="maxPoolPreparedStatementPerConnectionSize"
+			value="${jdbc.pool.maxPoolPreparedStatementPerConnectionSize}" />
+		<property name="filters" value="${jdbc.pool.filters}" />
 	</bean>
 
 	<!-- sqlSessionFactory -->
