@@ -58,7 +58,7 @@ public class ExceptionReqController {
 		params.put("showStartTime", showStartTime);
 		params.put("showEndTime", showEndTime);
 		params.put("exceptionState", exceptionState);		
-		List<Map<String, Object>> exceptionRecord = this.commonBO.selectALL("com.sie.data.ExceptionRequest.selectException",params);// 查询结果封装到list集合中
+		List<Map<String, Object>> exceptionRecord = this.commonBO.selectList("com.sie.data.ExceptionRequest.selectException",params);// 查询结果封装到list集合中
 		System.out.println("exceptionRecord中的Map"+exceptionRecord);
 		return exceptionRecord;
 	}
@@ -93,7 +93,7 @@ public class ExceptionReqController {
 		params.put("showStartTime", showStartTime);
 		params.put("showEndTime", showEndTime);
 		params.put("exceptionState", exceptionState);		
-		List<Map<String, Object>> exceptionRecord = this.commonBO.selectALL("com.sie.data.ExceptionRequest.selectException",params);// 查询结果封装到list集合中
+		List<Map<String, Object>> exceptionRecord = this.commonBO.selectList("com.sie.data.ExceptionRequest.selectException",params);// 查询结果封装到list集合中
 		System.out.println("exceptionRecord中的Map"+exceptionRecord);
 		return exceptionRecord;
 	}

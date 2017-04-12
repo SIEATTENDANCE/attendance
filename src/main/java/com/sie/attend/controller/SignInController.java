@@ -58,12 +58,13 @@ public class SignInController {
 		/*
 		 * //测试数据 datestart="2017-04-05"; String username ="123";
 		 */
-
+/*
 		System.out.println("signin方法中的值" + datestart);
 		System.out.println("signin方法中的值" + attendstate);
 		System.out.println("signin方法中的值" + dateend);
 		System.out.println("signin方法中的值" + username);
 
+	*/	
 		int startShow = (showPage - 1) * pageSize;
 
 		// 分页(判断查询从第几条数据开始查，然后查多少条)
@@ -74,10 +75,10 @@ public class SignInController {
 		params.put("attendstate", attendstate);
 		params.put("startShow", startShow);
 		params.put("pageSize", pageSize);
-		List<Map<String, Object>> list = this.commonBO.selectALL("com.sie.data.Sign.SelectAllSignByUser", params);// 查询结果封装到list集合中
+		List<Map<String, Object>> list = this.commonBO.selectList("com.sie.data.Sign.SelectAllSignByUser", params);// 查询结果封装到list集合中
 
 		// 将获取到的list集合里面的数据分页显示
-		System.out.println("signin中的" + list);
+		System.out.println("signin中分页显示数据" + list);
 
 		// list前台非空校验
 		return list;
@@ -98,23 +99,25 @@ public class SignInController {
 		String time = TimeStyle.format(new Date());
 
 		// 测试数据
-/*		username = "123";
-		date = "2017-03-07";
-		time = "06:30:28";*/
+/*        		
+        username = "123";
+		date = "2017-03-12";
+		time = "13:30:28";
+		*/
 
 		// 判断是否已经签到
 		Map<String, Object> ifSign = new HashMap<String, Object>(10);
 		ifSign.put("username", username);
 		ifSign.put("date", date);
 		ifSign.put("recd_inout", "in");
-		ifSign = this.commonBO.selectIfSign("com.sie.data.Sign.SelectUserIfSign", ifSign);
-		System.out.println("签到记录"+ifSign);
+		ifSign = this.commonBO.selectOne("com.sie.data.Sign.SelectUserIfSign", ifSign);
+		//System.out.println("签到记录"+ifSign);
 		if (!(ifSign.get("count(*)").toString().equals("0"))) {
 			resultMap.put("result", "你今天已经签到过了");
 			return resultMap;
 		}
 		// 查询签到的时间,判断是否迟到
-		Map<String, Object> cheskSigntime = this.commonBO.selectCheskSigntime("com.sie.data.Sign.SelectCheskSigntime");
+		Map<String, Object> cheskSigntime = this.commonBO.selectOne("com.sie.data.Sign.SelectCheskSigntime");
 		String signState = "except";
 		if (time.compareTo(cheskSigntime.get("time1").toString()) < 0
 				|| time.compareTo(cheskSigntime.get("time1").toString()) == 0) {
@@ -138,11 +141,11 @@ public class SignInController {
 		params.put("work_state", signState);
 		params.put("mor_noon", "mor");
 		params.put("comefrom", cheskSigntime.get("rec_type"));
-		int insertSignMor = this.commonBO.insertSignMor("com.sie.data.Sign.InsertSignMorRecord", params);
-		System.out.println("插入上午的签到数据成功" + insertSignMor);
+		int insertSignMor = this.commonBO.insertOne("com.sie.data.Sign.InsertSignMorRecord", params);
+		//System.out.println("插入上午的签到数据成功" + insertSignMor);
 		params.put("mor_noon", "noon");
-		int insertSignNoon = this.commonBO.insertSignNoon("com.sie.data.Sign.InsertSignNoonRecord", params);
-		System.out.println("插入下午签退异常数据成功" + insertSignNoon);
+		int insertSignNoon = this.commonBO.insertOne("com.sie.data.Sign.InsertSignNoonRecord", params);
+		//System.out.println("插入下午签退异常数据成功" + insertSignNoon);
 		return resultMap;
 
 	}
@@ -162,46 +165,60 @@ public class SignInController {
 		SimpleDateFormat TimeStyle = new SimpleDateFormat("HH:mm:ss");
 		String date = dateStyle.format(new Date());
 		String time = TimeStyle.format(new Date());
+		//签退测试数据
+/*	     		
+        username ="123";
+		date = "2017-03-12";
+		time = "15:30:28";
+		*/
 
 		// 判断是否已经签到
 		Map<String, Object> ifSign = new HashMap<String, Object>();
 		ifSign.put("username", username);
 		ifSign.put("date", date);
 		ifSign.put("recd_inout", "in");
-		ifSign = this.commonBO.selectIfSign("com.sie.data.Sign.SelectUserIfSign", ifSign);
-		System.out.println(ifSign);
+		ifSign = this.commonBO.selectOne("com.sie.data.Sign.SelectUserIfSign", ifSign);
 		if (ifSign.get("count(*)").toString().equals("0")) {
 			resultMap.put("result", "你今天还没有签到！");
 			return resultMap;
 		}
-		ifSign.put("recd_inout", "out");
-		ifSign = this.commonBO.selectIfSign("com.sie.data.Sign.SelectUserIfSign", ifSign);
-		if (!(ifSign.get("count(*)").toString().equals("0"))) {
+		//获取上午的签到状态,如果是旷工，则下午也是旷工
+		Boolean flage=ifSign.get("work_state").toString().equals("nowork");
+		
+		
+		Map<String, Object> ifSignNoon = new HashMap<String, Object>();
+		ifSignNoon.put("username", username);
+		ifSignNoon.put("date", date);
+		ifSignNoon.put("recd_inout", "out");
+		ifSignNoon = this.commonBO.selectOne("com.sie.data.Sign.SelectUserIfSign", ifSignNoon);
+		if (!(ifSignNoon.get("count(*)").toString().equals("0"))) {
 			resultMap.put("result", "你已经签退过啦！");
 			return resultMap;
 		}
 
 		// 查询签退的时间,判断是否早退
-		Map<String, Object> cheskSigntime = this.commonBO.selectCheskSigntime("com.sie.data.Sign.SelectCheskSigntime");
-		String signState = "except";
+		Map<String, Object> cheskSigntime = this.commonBO.selectOne("com.sie.data.Sign.SelectCheskSigntime");
+		String signState = "nowork";
 		if (time.compareTo(cheskSigntime.get("time4").toString())>0
 				|| time.compareTo(cheskSigntime.get("time4").toString()) == 0) {
 			signState = "normal";
-			resultMap.put("result", "签退到成功，正常出勤");
+			resultMap.put("result", "签退成功，正常出勤");
 		} else {
 			if (time.compareTo(cheskSigntime.get("time3").toString())<0
 					|| time.compareTo(cheskSigntime.get("time3").toString()) == 0) {
 				signState = "nowork";
-				resultMap.put("result", "签退到成功，状态旷工！");
+				resultMap.put("result", "签退成功，状态旷工！");
 			} else {
 				signState = "early";
 				resultMap.put("result", "签退成功，你早退！");
 			}
 		}
-/*		if(ifSign.get("work_state").toString().equals("nowork")){
+	
+		
+		if(flage){
 			signState = "nowork";
-			resultMap.put("result", "签退到成功，状态旷工！");
-		}*/
+			resultMap.put("result", "签退成功，状态旷工！");
+		}
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("username", username);
 		params.put("date", date);
@@ -209,8 +226,13 @@ public class SignInController {
 		params.put("real_time", cheskSigntime.get("time4"));
 		params.put("work_state", signState);
 		params.put("comefrom", cheskSigntime.get("rec_type"));
-		int insertSignNoon = this.commonBO.updateSignNoon("com.sie.data.Sign.updateSignNoonRecord", params);
-		System.out.println("修改签退数据成功" + insertSignNoon);
+		this.commonBO.updateOne("com.sie.data.Sign.updateSignNoonRecord", params);
+		//System.out.println("修改签退数据成功" + insertSignNoon);
+		//下午签退时间在t3前的话,上午也要是旷工
+		if("nowork".equals(signState)){
+			 this.commonBO.updateOne("com.sie.data.Sign.updateSignMorRecord",params);
+			
+		}
 		return resultMap;
 	}
 

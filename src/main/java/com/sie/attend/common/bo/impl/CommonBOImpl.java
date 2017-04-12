@@ -13,63 +13,33 @@ public class CommonBOImpl implements CommonBO {
 	private CommonDAO commonDao;
 
 	@Override
+	public Map<String, Object> selectOne(String sqlId) {
+		return this.commonDao.getSession().selectOne(sqlId);
+	}
+
+	@Override
 	public Map<String, Object> selectOne(String sqlId, Map<String, Object> params) {
 		return this.commonDao.getSession().selectOne(sqlId, params);
 	}
 
 	@Override
-	public Map<String, Object> selectOne(String sqlId) {
-		// TODO Auto-generated method stub
-		return this.commonDao.getSession().selectOne(sqlId);
-	}
-	
-
-	@Override
-	public List<Map<String, String>> selectSignRecord(String sqlId, Map<String, Object> params) {
-		return this.commonDao.getSession().selectList(sqlId, params);
-	}
-
-	@Override
-	public Map<String, Object> selectIfSign(String sqlId, Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		return this.commonDao.getSession().selectOne(sqlId, params);
-	}
-
-	@Override
-	public Map<String, Object> selectCheskSigntime(String sqlId) {
-		// TODO Auto-generated method stub
-		return this.commonDao.getSession().selectOne(sqlId);
-	}
-
-	@Override
-	public int insertSignMor(String sqlId, Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		return this.commonDao.getSession().insert(sqlId, params);
-	}
-
-	@Override
-	public int insertSignNoon(String sqlId, Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		return this.commonDao.getSession().insert(sqlId, params);
-
-	}
-
-	@Override
-	public int updateSignNoon(String string, Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		return this.commonDao.getSession().update(string, params);
+	public List<Map<String, Object>> selectList(String sqlId) {
+		return this.commonDao.getSession().selectList(sqlId);
 	}
 
 	@Override
 	public List<Map<String, Object>> selectList(String sqlId, Map<String, Object> params) {
-		// TODO Auto-generated method stub
 		return this.commonDao.getSession().selectList(sqlId, params);
 	}
 
 	@Override
-	public List<Map<String, Object>> selectALL(String sqlId, Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		return this.commonDao.getSession().selectList(sqlId, params);
+	public int insertOne(String sqlId, Map<String, Object> params) {
+		return this.commonDao.getSession().insert(sqlId, params);
+	}
+
+	@Override
+	public int updateOne(String string, Map<String, Object> params) {
+		return this.commonDao.getSession().update(string, params);
 	}
 
 }

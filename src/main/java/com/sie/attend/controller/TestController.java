@@ -39,7 +39,7 @@ public class TestController {
 		params.put("datestart", "2017-04-05");
 		params.put("dateend", "2017-04-08");
 		params.put("attendstate", "normal");
-		List<Map<String, String>> list = commonBO.selectSignRecord("com.sie.data.Sign.SelectAllSignByUser", params);//查询结果封装到list集合中
+		List<Map<String,Object>> list = commonBO.selectList("com.sie.data.Sign.SelectAllSignByUser", params);//查询结果封装到list集合中
 		System.out.println(list);
 		return "forward:/WEB-INF/html/login.html";
 	}

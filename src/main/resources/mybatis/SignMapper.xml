@@ -27,7 +27,8 @@
 	<select id="SelectUserIfSign" resultType="Map" parameterType="java.util.Map">
 		select count(*),rec.work_state
 		from employee emp,record rec
-		where emp.emp_id=rec.emp_id
+		where
+		emp.emp_id=rec.emp_id
 		and emp.emp_id=#{username}
 		and rec.date=#{date}
 		and rec.recd_inout=#{recd_inout}
@@ -53,23 +54,29 @@
 		insert into
 		record(emp_id,date,recd_type,mor_noon,work_state)
 		values
-		<if test="work_state='nowork' ">
-			(#{username},#{date},'signout','noon','nowork')
-		</if>
-		<if test="work_state!='nowork' ">
-			(#{username},#{date},'signout','noon','except')
-		</if>
+		(#{username},#{date},'signout','noon','nowork')
 	</insert>
 
 	<update id="updateSignNoonRecord" parameterType="java.util.Map">
-		update record rec
+		update record
+		rec
 		set rec.time = #{time}, rec.real_time = #{real_time},
-		rec.work_state = #{work_state}, rec.comefrom = #{comefrom},rec.recd_inout='out'
+		rec.work_state = #{work_state}, rec.comefrom =#{comefrom},rec.recd_inout='out'
 		where
 		rec.emp_id = #{username}
-		and rec.date = #{date}
+		and
+		rec.date = #{date}
 		and rec.mor_noon='noon'
 	</update>
+
+	<update id="updateSignMorRecord" parameterType="java.util.Map">
+		update record rec
+		set	rec.work_state = #{work_state}
+		where rec.emp_id = #{username}
+		and rec.date = #{date}
+		and rec.mor_noon='mor'
+	</update>
+
 
 
 

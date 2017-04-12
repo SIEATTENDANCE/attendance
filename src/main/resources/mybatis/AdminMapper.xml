@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sie.data.AdminMapper" >
+	<select id="showLockTime" resultType="map" parameterType="map">
+		select time1,time2,time3,time4 from real_time 
+	</select>
+	
+	<update id="setLockTime"  parameterType="map">
+		update real_time 
+		<set>
+			<if test="time1 !=null">
+				time1 =#{time1},
+			</if>
+			<if test="time1 !=null">
+				time2 =#{time2},
+			</if>
+			<if test="time1 !=null">
+				time3 =#{time3},
+			</if>
+			<if test="time1 !=null">
+				time4 =#{time4},
+			</if>
+		</set>
+	</update>
+</mapper>

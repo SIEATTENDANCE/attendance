@@ -68,7 +68,7 @@
 				<li><a href="#">迟到</a></li>
 				<li><a href="#">早退</a></li>
 				<li><a href="#">旷工</a></li>
-				<li><a href="#">异常</a></li>
+				<!-- <li><a href="#">异常</a></li> -->
 			</ul>
 		</div>
 		<div class="search">
@@ -142,7 +142,7 @@
 				case '迟到' : signState = 'late';break;
 				case '早退' : signState = 'early';break;
 				case '旷工' : signState = 'nowork';break;
-				case '异常' : signState = 'except';break;
+			/* 	case '异常' : signState = 'except';break; */
 				default : signState = 'all';break;
 			};
 			
@@ -171,7 +171,7 @@
 							case 'late' : value.workstate = '迟到';break;
 							case 'early' : value.workstate = '早退';break;
 							case 'nowork' : value.workstate = '旷工';break;
-							case 'except' : value.workstate = '异常';break;
+						/* 	case 'except' : value.workstate = '异常';break; */
 						}
 		          		html+="<tr><td>"+value.empid+"</td><td>"+value.empname+"</td><td>"+value.rectype+"</td><td>"+value.recdate+"</td><td>"+value.rectime+"</td><td>"+value.workstate+"</td><td>"+value.recfrom+"</td></tr>" 
 		          	});
