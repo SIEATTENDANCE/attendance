@@ -35,25 +35,25 @@ public class SignInController {
 	 * @return
 	 */
 	@RequestMapping(value = { "/getSignRecord" }, method = { RequestMethod.POST }, produces = { "application/json" })
-	public List<Map<String, Object>> getSignRecord(HttpServletRequest request) {
+	public Map<String, Object> getSignRecord(HttpServletRequest request) {
+		
+		Map<String,Object> resultMap = new HashMap<String,Object>(2);
+		
+//		SimpleDateFormat dateStyle = new SimpleDateFormat("yyyy-MM-dd");
+//		String date = dateStyle.format(new Date());
+//		String datestart = date;// 查询打卡情况的起始时间
+//		String dateend = date;// 查询打卡情况的结束时间
+//		String attendstate = "all";// 查询打卡记录的状态
+//		int showPage = 1;// 默认第一页
+//		int pageSize = 10;// 默认显示5条记录
 
-		SimpleDateFormat dateStyle = new SimpleDateFormat("yyyy-MM-dd");
-		String date = dateStyle.format(new Date());
-
-		String datestart = date;// 查询打卡情况的起始时间
-		String dateend = date;// 查询打卡情况的结束时间
-		String attendstate = "all";// 查询打卡记录的状态
-		int showPage = 1;// 默认第一页
-		int pageSize = 10;// 默认显示5条记录
-
-		datestart = request.getParameter("startDay");// 查询打卡记录的起始时间
-		attendstate = request.getParameter("signState");// 查询要打卡记录的状态
-		dateend = request.getParameter("endDay");// 查询打卡记录的截至时间
+		String datestart = request.getParameter("startDay");// 查询打卡记录的起始时间
+		String dateend = request.getParameter("endDay");// 查询打卡记录的截至时间
+		String attendstate = request.getParameter("signState");// 查询要打卡记录的状态
 		HttpSession session = request.getSession();// 获取用户信息
 		String username = (String) session.getAttribute("emp_id");
-		// showPage = Integer.parseInt(request.getParameter("showPage"));// 当第几页
-		// pageSize = Integer.parseInt(request.getParameter("pageSize"));//
-		// 每一页多少数据
+		int pageSize =Integer.parseInt(request.getParameter("pageSize"));
+		int pageNumber = Integer.parseInt(request.getParameter("pageNumber"));
 
 		/*
 		 * //测试数据 datestart="2017-04-05"; String username ="123";
@@ -65,23 +65,26 @@ public class SignInController {
 		System.out.println("signin方法中的值" + username);
 
 	*/	
-		int startShow = (showPage - 1) * pageSize;
-
+		int startShow = (pageNumber - 1) * pageSize;
 		// 分页(判断查询从第几条数据开始查，然后查多少条)
-		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> params = new HashMap<String, Object>(7);
 		params.put("username", username);
 		params.put("datestart", datestart);
 		params.put("dateend", dateend);
 		params.put("attendstate", attendstate);
 		params.put("startShow", startShow);
 		params.put("pageSize", pageSize);
+		
 		List<Map<String, Object>> list = this.commonBO.selectList("com.sie.data.Sign.SelectAllSignByUser", params);// 查询结果封装到list集合中
+		params = this.commonBO.selectOne("com.sie.data.Sign.selectSignCount",params);
 
 		// 将获取到的list集合里面的数据分页显示
-		System.out.println("signin中分页显示数据" + list);
-
-		// list前台非空校验
-		return list;
+//		System.out.println("signin中分页显示数据" + list);
+		
+		resultMap.put("total", params.get("count(*)".toString()));
+		resultMap.put("rows", list);
+		
+		return resultMap;
 	}
 
 	// 签到业务

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>时间设置</title>
+
+<!-- Bootstrap -->
+<link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet"
+	media="screen">
+
+</head>
+
+<body>
+	
+	<div class="container">
+		<h2>工作时间设置(管理员)</h2>
+		<hr>
+		<div class="row">
+					<div class=" col-md-6">
+			<table class="table">
+			<caption>
+				<label  style="font-size: 20px;">工作时间段设置</label>(T1&lt;T2&lt;T3&lt;T4)
+			</caption>
+			<thead>
+				<tr>
+					<td colspan="2" style="text-align: center;font-size: 16px">上午</td>
+					<td colspan="2" style="text-align: center;font-size: 16px">下午</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><label>开始时间T1：</label></td>
+					<td><input type="time" id="T1"> </td>
+					<td><label>开始时间T3：</label></td>
+					<td><input type="time" id="T3"></td>
+				</tr>
+				<tr>
+					<td><label>结束时间T2：</label></td>
+					<td><input type="time" id="T2"></td>
+					<td><label>结束时间T4:</label></td>
+					<td><input type="time" id="T4"></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td><button class="btn btn-default" type="submit" id="btn">确定</button></td>
+					<td><a class="btn btn-default" href="timeShow.html" role="button">关闭</a></td>
+					<td></td>
+				</tr>
+			</tfoot>
+		</table>
+		</div>
+		</div>
+	</div>
+
+</body>
+
+<script src="../bootstrap/jquery.min.js"></script>
+<script src="../bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	
+	$.post("../admin/showLockTime",
+		function(data){
+			$("#T1").val(data.time1);
+			$("#T2").val(data.time2);
+			$("#T3").val(data.time3);
+			$("#T4").val(data.time4);
+		},"json"
+	);
+
+	$('#btn').click(function(){
+		var t1 = $('#T1').val();
+		var t2 = $('#T2').val();
+		var t3 = $('#T3').val();
+		var t4 = $('#T4').val();
+		if(t1 == ""||t2==""||t3==""||t4==""){
+			alert("请输入完整时间");
+		}else{
+			if(t1>=t2 || t1>=t3 || t1>=t4){
+				alert("时间T1必须为最小");
+			}else if(t2>=t3 || t2>=t4){
+				alert("时间T2必须小于T3和T4");
+			}else if(t3>=t4){
+				alert("时间T3必须小于T4");
+			}else{
+				$.post("../admin/setLockTime",
+					{time1:t1,time2:t2,time3:t3,time4:t4},
+					function(data){
+						if(data.result==1){
+							alert("更新成功！");
+							window.location.href='timeShow.html';
+						}else{
+							alert("提交失败！请重新提交！");
+						}
+					}		
+				);
+			}
+		}
+		
+	});
+});
+</script>
+</html>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sie.data.ExceptionChange">
+	<insert id="insertExceptionChange" parameterType="java.util.Map">
+		insert into
+		excep_change(fload_id,ex_empid,ex_state,ex_createtime,note)
+		values
+		(#{fload_id},#{username},'save',#{date},#{note})
+	</insert>
+
+	<select id="selectExceptionRecord" resultType="Map"
+		parameterType="java.util.Map">
+		select emp.emp_id empid,emp.emp_name
+		empname,rec.recd_type rectype,
+		rec.date recdate,rec.time
+		rectime,rec.work_state workstate,rec.id id
+		from employee emp,record rec
+		where
+		emp.emp_id=rec.emp_id
+		and emp.emp_id=#{username}
+		and
+		rec.work_state!='normal'
+		and rec.show="true"
+		order by rec.date desc
+		limit
+		#{startShow},#{pageSize}
+	</select>
+
+	<select id="selectChoiceExcep" resultType="Map" parameterType="java.util.Map">
+		select emp.emp_id empid,emp.emp_name empname,rec.recd_type rectype,
+		rec.date recdate,rec.work_state workstate,rec.id
+		from employee emp,record rec
+		where
+		emp.emp_id=rec.emp_id
+		and rec.id=#{choice}
+		order by rec.date desc
+	</select>
+	
+	
+	
+	<select id="ifCommit" resultType="Map" parameterType="java.util.Map">
+		select emp.emp_id empid,emp.emp_name empname,rec.recd_type rectype,
+		rec.date recdate,rec.work_state workstate,rec.id
+		from employee emp,record rec
+		where
+		emp.emp_id=rec.emp_id
+		and rec.id=#{choice}
+		order by rec.date desc
+	</select>
+	
+</mapper>

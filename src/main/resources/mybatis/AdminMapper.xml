@@ -7,19 +7,7 @@
 	
 	<update id="setLockTime"  parameterType="map">
 		update real_time 
-		<set>
-			<if test="time1 !=null">
-				time1 =#{time1},
-			</if>
-			<if test="time1 !=null">
-				time2 =#{time2},
-			</if>
-			<if test="time1 !=null">
-				time3 =#{time3},
-			</if>
-			<if test="time1 !=null">
-				time4 =#{time4},
-			</if>
-		</set>
+		set
+		time1 =#{time1},time2 =#{time2},time3 =#{time3},time4 =#{time4}
 	</update>
 </mapper>

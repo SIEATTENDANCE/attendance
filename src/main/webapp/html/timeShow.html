@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>时间显示</title>
+
+<!-- Bootstrap -->
+<link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet"
+	media="screen">
+
+</head>
+
+<body>
+	
+	<div class="container">
+		<h2>工作时间设置(管理员)</h2>
+		<hr>
+		<div class="row">
+					<div class=" col-md-6">
+			<table class="table">
+			<caption style="font-size: 20px;font-weight: bold;">
+				工作时间段设置
+			</caption>
+			<thead>
+				<tr>
+					<td colspan="2" style="text-align: center;font-size: 16px">上午</td>
+					<td colspan="2" style="text-align: center;font-size: 16px">下午</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><label>开始时间T1：</label></td>
+					<td><span id="T1"></span></td>
+					<td><label>开始时间T3：</label></td>
+					<td><span id="T3"></span></td>
+				</tr>
+				<tr>
+					<td><label>结束时间T2：</label></td>
+					<td><span id="T2"></span></td>
+					<td><label>结束时间T4:</label></td>
+					<td><span id="T4"></span></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td><a class="btn btn-default" href="timeSet.html" role="button">设置</a></td>
+					<td><a class="btn btn-default" href="#" role="button">关闭</a></td>
+					<td></td>
+				</tr>
+			</tfoot>
+		</table>
+		</div>
+		</div>
+	</div>
+
+</body>
+
+<script src="../bootstrap/jquery.min.js"></script>
+<script src="../bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$.post("../admin/showLockTime",
+		function(data){
+			$("#T1").html(data.time1);
+			$("#T2").html(data.time2);
+			$("#T3").html(data.time3);
+			$("#T4").html(data.time4);
+		}
+	);
+});
+</script>
+</html>

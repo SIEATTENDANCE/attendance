@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sie.attend.common.bo.CommonBO;
+import com.sie.attend.util.FloadNumber;
 
 /**
  * 签到签退记录
@@ -34,6 +35,7 @@ public class ExceptionReqController {
 	 * 
 	 * @return
 	 */
+	//点击查询,异常申请触发
 	@RequestMapping(value = { "/getExceptionRecord" }, method = { RequestMethod.GET}, produces = { "application/json" })
 	public List<Map<String, Object>> getExceptionRecord(HttpServletRequest request) {
 		SimpleDateFormat dateStyle = new SimpleDateFormat("yyyy-MM-dd");
@@ -63,40 +65,12 @@ public class ExceptionReqController {
 		return exceptionRecord;
 	}
 	
+	//点击编辑按钮后触发
 	
 	
+	//点击删除按钮后触发
 	
 	
-	
-	//添加异常变更申请
-	@RequestMapping(value = { "/addExceptionchange" }, method = { RequestMethod.GET}, produces = { "application/json" })
-	public List<Map<String, Object>> addExceptionchange(HttpServletRequest request) {
-		SimpleDateFormat dateStyle = new SimpleDateFormat("yyyy-MM-dd");
-		String date = dateStyle.format(new Date());
-		
-		String exceptionNum = request.getParameter("exceptionNum");
-		String showStartTime = request.getParameter("showStartTime");
-		String showEndTime = request.getParameter("showEndTime");//查询异常申请的结束时间
-		String exceptionState = request.getParameter("exceptionState");//要查询的异常状态
-		HttpSession session = request.getSession();// 获取用户信息
-		String username = (String) session.getAttribute("emp_id");	
-		
-		//测试数据
-/*		String exceptionNum = null;
-		String showStartTime = "2017-04-07";
-		String showEndTime = "2017-04-18";
-		String exceptionState = "new";
-		String username = "123";*/
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("username", username);
-		params.put("exceptionNum", exceptionNum);
-		params.put("showStartTime", showStartTime);
-		params.put("showEndTime", showEndTime);
-		params.put("exceptionState", exceptionState);		
-		List<Map<String, Object>> exceptionRecord = this.commonBO.selectList("com.sie.data.ExceptionRequest.selectException",params);// 查询结果封装到list集合中
-		System.out.println("exceptionRecord中的Map"+exceptionRecord);
-		return exceptionRecord;
-	}
 
 
 }
