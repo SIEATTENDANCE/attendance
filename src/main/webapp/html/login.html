@@ -96,7 +96,7 @@
 		});
 		
 		$("#btn").click(function() {
-			$.post("../login/getLoginMess.do", {
+			$.post("../rest/login/getLoginMess.do", {
 				username : $('#username').val(),
 				password : $("#password").val(),
 				CheckImg : $("#randomCode").val()

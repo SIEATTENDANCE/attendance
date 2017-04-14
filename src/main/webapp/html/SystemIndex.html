@@ -90,11 +90,11 @@
 			emp_id = params.substring(params.indexOf("=")+1);
 		}
 		
-		$.post("../login/getEmpMess", {"emp_id":emp_id}, function(data) {
+		$.post("../rest/login/getEmpMess", {"emp_id":emp_id}, function(data) {
 			$('#emp_name').text(data.emp_name);
 		});
 
-		$.post("../login/getMenuMess", {"emp_id":emp_id}, function(data) {
+		$.post("../rest/login/getMenuMess", {"emp_id":emp_id}, function(data) {
 			initMenu(data, $(".side-menu"));
 			$(".side-menu > li").addClass("menu-item");
 		});
@@ -114,7 +114,7 @@
 		
 		
 		$('#quitEmp').on('click',function(){
-			$.post("../login/quitEmp",
+			$.post("../rest/login/quitEmp",
 		        function(data){
 			        if(data.quitMess == 1){
 			        	alert("退出成功");

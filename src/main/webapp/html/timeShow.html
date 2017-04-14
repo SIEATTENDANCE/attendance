@@ -62,7 +62,7 @@
 <script src="../bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-	$.post("../admin/showLockTime",
+	$.post("../rest/admin/showLockTime",
 		function(data){
 			$("#T1").html(data.time1);
 			$("#T2").html(data.time2);

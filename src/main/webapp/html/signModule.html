@@ -123,14 +123,14 @@
 		
 		//签到
 		$('#btn1').click(function(){
-			$.post("../signIn/UserSignIn",
+			$.post("../rest/signIn/UserSignIn",
 			          function(data){
 						alert(data.result);
 			          }, "json");
 		});
 		//签退
 		$('#btn2').click(function(){
-			$.post("../signIn/UserSignOut",
+			$.post("../rest/signIn/UserSignOut",
 			          function(data){
 						alert(data.result);
 			          }, "json");
@@ -144,7 +144,7 @@
 		$('#cusTable').bootstrapTable('destroy');
 		//创建表格
 		$('#cusTable').bootstrapTable({
-		    url: '../signIn/getSignRecord', //服务器数据的加载地址
+		    url: '../rest/signIn/getSignRecord', //服务器数据的加载地址
 		    method:'post', //服务器数据的请求方式
 		    cache:false, //禁用 AJAX 数据缓存
 		    contentType:'application/x-www-form-urlencoded', //发送到服务器的数据编码类型
