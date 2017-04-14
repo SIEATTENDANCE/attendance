@@ -72,7 +72,6 @@ public class LoginController {
 					session.setAttribute("emp_id", emp_id);
 					returnMap.put("success", "yes");
 					returnMap.put("emp_id",emp_id);
-					System.out.println("logincontroller:"+returnMap);
 					return returnMap;//校验成功
 				}else{
 					returnMap.put("success", "no");
@@ -92,9 +91,10 @@ public class LoginController {
 	 * @param emp_id
 	 * @return
 	 */
-	@RequestMapping(value={"/getMenuMess/{emp_id}"},method={RequestMethod.GET},produces={"application/json"})
-	public List<Map<String,Object>> getMenuMess(@PathVariable("emp_id") String emp_id){
+	@RequestMapping(value={"/getMenuMess"},method={RequestMethod.POST},produces={"application/json"})
+	public List<Map<String,Object>> getMenuMess(HttpServletRequest request){
 		Map<String,Object> map = new HashMap<String,Object>(1);
+		String emp_id = request.getParameter("emp_id");
 		map.put("emp_id", emp_id);
 		List<Map<String,Object>> list = this.commonBO.selectList("com.sie.attend.pojo.LoginMapper.selectMenuByEmpId", map);
 		//System.out.println(list);
@@ -106,9 +106,10 @@ public class LoginController {
 	 * @param emp_id
 	 * @return
 	 */
-	@RequestMapping(value={"/getEmpMess/{emp_id}"},method=RequestMethod.GET,produces={"application/json"})
-	public Map<String,Object> getEmpMess(@PathVariable("emp_id") String emp_id){
+	@RequestMapping(value={"/getEmpMess"},method=RequestMethod.POST,produces={"application/json"})
+	public Map<String,Object> getEmpMess(HttpServletRequest request){
 		Map<String,Object> map = new HashMap<String,Object>(5);
+		String emp_id = request.getParameter("emp_id");
 		map.put("emp_id", emp_id);
 		map = this.commonBO.selectOne("com.sie.attend.pojo.LoginMapper.selectByEmpId", map);
 		return map;

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+<title>异常申请管理</title>
+
+<!-- Bootstrap -->
+<link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet"
+	media="screen">
+<!-- 导入日历插件css -->
+<link href="../bootstrap/css/bootstrap-datetimepicker.min.css"
+	rel="stylesheet" media="screen">
+<!-- 导入表格插件css -->
+<link href="../bootstrap/css/bootstrap-table.min.css" rel="stylesheet"
+	media="screen">
+<script src="../common/lib/html5.js"></script>
+<script src="../common/lib/respond.min.js"></script>
+<style type="text/css">
+.search{
+	float : left;
+	padding:10px 10px;
+}
+.search p{
+	padding-top: 3px;
+	font-size: 15px;
+	font-weight:bold;
+}
+</style>
+</head>
+<body>
+	<div class="container">
+		<h2>异常申请管理</h2>
+		<hr>
+		<div class="search">
+			<p>编号</p>
+		</div>
+		<div class="search" style="width: 150px">
+			<input type="text" class="form-control" id="exceptionNum">
+		</div>
+		<!-- 状态 -->
+		<div class="dropdown search">
+			<label>&nbsp;状态：</label>
+			<button class="btn btn-default dropdown-toggle" type="button"
+				id="signState" data-toggle="dropdown" aria-haspopup="true"
+				aria-expanded="true">
+				新增 <span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu" aria-labelledby="signState"
+				id="signStateList">
+				<li><a href="#">新增</a></li>
+				<li><a href="#">已提交</a></li>
+				<li><a href="#">退回</a></li>
+				<li><a href="#">已完成</a></li>
+				<li><a href="#">终止</a></li>
+			</ul>
+		</div>
+		<!-- 创建开始时间 -->
+		<div class="search">
+			<p>创建开始时间:</p>
+		</div>
+		<div class="input-group date form_date search" data-date=""
+			data-date-format="yyyy-mm-dd" style="width: 160px">
+			<input class="form-control" id="startDay" type="text"
+				readonly> <span class="input-group-addon"><span
+				class="glyphicon glyphicon-calendar"></span></span>
+		</div>
+		<!-- 创建结束时间 -->
+		<div class="search">
+			<p>创建结束时间</p>
+		</div>
+		<div class="input-group date form_date search" data-date=""
+			data-date-format="yyyy-mm-dd" style="width: 160px">
+			<input class="form-control" id="endDay" type="text" readonly>
+			<span class="input-group-addon"><span
+				class="glyphicon glyphicon-calendar"></span></span>
+		</div>
+		<div class="search">
+			<button type="submit" class="btn btn-default" id="submit">查询</button>
+			<button type="reset" class="btn btn-default" id="reset">重置</button>
+		</div>
+		<!-- 表格 -->
+		<table id="cusTable"></table>
+	</div>
+
+</body>
+<script src="../bootstrap/jquery.min.js"></script>
+<script src="../bootstrap/js/bootstrap.min.js"></script>
+<!-- 导入日历插件-->
+<script src="../bootstrap/js/bootstrap-datetimepicker.min.js"></script>
+<script src="../bootstrap/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<!-- 导入表格插件 -->
+<script src="../bootstrap/js/bootstrap-table.min.js"></script>
+<script src="../bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {	
+	
+	dataInit();
+	
+	//获取下拉菜单中的内容并显示
+	$('#signStateList li').on('click',function() {
+		$('#signState').html(
+				$(this).text() + '<span class="caret"></span>');
+	});
+	
+	//对起始时间和截止时间进行限制
+	$("#startDay").change(function() {
+	  if($('#startDay').val() > (new Date().Format("yyyy-MM-dd"))){
+		  alert("起始时间不能超过今天");
+		  $('#startDay').val(new Date().Format("yyyy-MM-dd"));
+	  }
+	});
+	$("#endDay").change(function() {
+	  if($('#startDay').val() > $('#endDay').val()){
+		  alert("截止时间不能小于起始时间");
+		  $('#endDay').val(new Date().Format("yyyy-MM-dd"));
+	  }
+	});
+
+	//点击查询按钮时初始化表格
+	$('#submit').click(tableInit);
+	$('#reset').click(dataInit);
+
+});
+
+//初始化查询时间
+var dataInit = function(){
+	$('#exceptionNum').val("");
+	$('#startDay').val(new Date(new Date().getTime() - 604800000).Format("yyyy-MM-dd"));
+	$('#endDay').val(new Date().Format("yyyy-MM-dd"));
+	$('#signState').html('新增<span class="caret"></span>');
+}
+
+//表格初始化
+var tableInit = function(){
+	//销毁表格
+	$('#cusTable').bootstrapTable('destroy');
+	//创建表格
+	$('#cusTable').bootstrapTable({
+	    url: '../ExceptionRequest/getExceptionRecord', //服务器数据的加载地址
+	    method:'post', //服务器数据的请求方式
+	    cache:false, //禁用 AJAX 数据缓存
+	    contentType:'application/x-www-form-urlencoded', //发送到服务器的数据编码类型
+	    pagination:true, //在表格底部显示分页条
+	    pageNumber: 1, //页码
+	    pageSize: 5, //数据条数
+	    pageList:[2,5,10,20],
+	    showColumns: true, //是否显示所有的列
+	    minimumCountColumns: 3, //最少允许的列数
+	    showRefresh: true, //是否显示刷新按钮
+	    showPaginationSwitch: true, //是否显示数据条数选择框
+	    clickToSelect: true,
+	    sidePagination:'client', //客户端分页
+	    sortName: "recdate", //根据日期进行排序
+		sortOrder: "desc",
+	    dataType:'json', //服务器返回的数据类型
+	    queryParamsType:'undefined', //设置为 'limit' 则会发送符合 RESTFul 格式的参数，必须包含offset,limit
+	    							 //设置为'undefined'，则可以发pageNumber，pageSize等参数
+	    queryParams: function(params) {
+	    	var state = $('#signState').text();
+	    	var signState;
+			switch(state){
+				case '新增' : signState = 'new';break;
+				case '已提交' : signState = 'commit';break;
+				case '退回' : signState = 'return';break;
+				case '已完成' : signState = 'over';break;
+				case '终止' : signState = 'stop';break;
+			};
+	    	var params = {
+	    			exceptionNum: $('#exceptionNum').val(),
+	    			showStartTime: $('#startDay').val(),
+	    			showEndTime: $('#endDay').val(),
+	    			exceptionState: signState
+	    	}
+	    	return params;
+	    },
+	    columns : [ {
+			field : 'fload_id',
+			title : '编号'
+		}, {
+			field : 'ex_createtime',
+			title : '创建时间'
+		}, {
+			field : 'ex_state',
+			title : '状态',
+			formatter: function(value,row,index){
+				switch(value){
+					case 'new' : value='新增';break;
+					case 'commit' : value='已提交';break;
+					case 'over' : value='已完成';break;
+					case 'return' : value='退回';break;
+					case 'stop' : value='终止';break;
+				}
+				return value;
+			}
+		}, {
+			field : 'ex_dealtime',
+			title : '审批完成时间'
+		} ]
+		
+	});
+}
+//日历插件初始化
+$('.form_date').datetimepicker({
+    language:  'zh-CN',//中文，需要引用zh-CN.js包
+    weekStart: 1,
+    todayBtn:  1,
+	autoclose: 1,
+	todayHighlight: 1,
+	startView: 2,//月视图
+	minView: 2,
+	forceParse: 0
+});
+
+//日期格式转换
+Date.prototype.Format = function(fmt) { //author: meizz   
+	var o = {
+		"M+" : this.getMonth() + 1, //月份   
+		"d+" : this.getDate(), //日   
+	};
+	if (/(y+)/.test(fmt))
+		fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "")
+				.substr(4 - RegExp.$1.length));
+	for ( var k in o)
+		if (new RegExp("(" + k + ")").test(fmt))
+			fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k])
+					: (("00" + o[k]).substr(("" + o[k]).length)));
+	return fmt;
+}
+</script>
+</html>

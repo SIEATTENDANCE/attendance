@@ -77,6 +77,7 @@ public class SignInController {
 		
 		List<Map<String, Object>> list = this.commonBO.selectList("com.sie.data.Sign.SelectAllSignByUser", params);// 查询结果封装到list集合中
 		params = this.commonBO.selectOne("com.sie.data.Sign.selectSignCount",params);
+//		System.out.println("总记录数:" + params.get("count(*)".toString()));
 
 		// 将获取到的list集合里面的数据分页显示
 //		System.out.println("signin中分页显示数据" + list);

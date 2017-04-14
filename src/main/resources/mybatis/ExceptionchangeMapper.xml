@@ -6,7 +6,7 @@
 		insert into
 		excep_change(fload_id,ex_empid,ex_state,ex_createtime,note)
 		values
-		(#{fload_id},#{username},'save',#{date},#{note})
+		(#{fload_id},#{username},'new',#{date},#{note})
 	</insert>
 
 	<select id="selectExceptionRecord" resultType="Map"
@@ -36,17 +36,28 @@
 		and rec.id=#{choice}
 		order by rec.date desc
 	</select>
-	
-	
-	
 	<select id="ifCommit" resultType="Map" parameterType="java.util.Map">
-		select emp.emp_id empid,emp.emp_name empname,rec.recd_type rectype,
-		rec.date recdate,rec.work_state workstate,rec.id
-		from employee emp,record rec
-		where
-		emp.emp_id=rec.emp_id
-		and rec.id=#{choice}
-		order by rec.date desc
+		select ex_state
+		from excep_change
+		where fload_id={ExceptionFloadId}
 	</select>
+	
+	
+	<update id="updatetExceptionState"  parameterType="java.util.Map">
+		update excep_change
+		set ex_state=#{ex_state}
+		where fload_id={ExceptionFloadId}
+	</update>
+	
+	
+	<insert id="insertExceptionDetal" parameterType="java.util.Map">
+		insert into
+		excep_change_det(recd_id,excep_id,reason,emp_id)
+		values(#{exId},#{fload_id},#{exReason},#{username})
+		
+	</insert>
+	
+	
+	
 	
 </mapper>

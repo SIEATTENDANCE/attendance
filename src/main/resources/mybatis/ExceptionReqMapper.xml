@@ -3,15 +3,18 @@
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sie.data.ExceptionRequest">
 	<select id="selectException" resultType="Map" parameterType="java.util.Map">
-		select exc.fload_id,exc.ex_createtime,exc.ex_state,exc.ex_dealtime
-		from employee emp,excep_change exc
-		where emp.emp_id=exc.ex_empid
-		and emp.emp_id=#{username}
+		select exc.id,exc.fload_id,exc.ex_createtime,exc.ex_state,exc.ex_dealtime
+		from excep_change exc
+		where exc.ex_empid=#{username}
 		and exc.ex_createtime between #{showStartTime} and #{showEndTime}
-		<if test="exceptionNum!=null">
+		<if test="exceptionNum!=null and exceptionNum!=''">
 			and exc.fload_id=#{exceptionNum}
 		</if>
 		and exc.ex_state=#{exceptionState}	
+	</select>
+	
+	<select id="selectExceptionRecord" resultType="Map" parameterType="java.util.Map">
+			
 	</select>
 
 </mapper>

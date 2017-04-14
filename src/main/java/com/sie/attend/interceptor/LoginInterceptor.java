@@ -28,14 +28,12 @@ public class LoginInterceptor implements HandlerInterceptor {
 		
 		// 获取Session
 		HttpSession session = request.getSession();
-		String username = (String) session.getAttribute("user_name");
-
+		String username = (String) session.getAttribute("emp_id");
 		if (username != null) {
 			return true;
 		}
 		// 不符合条件的，跳转到登录界面
-		// request.getRequestDispatcher("/login.html").forward(request,
-		// response);
+		response.sendRedirect("login.html");
 		return false;
 	}
 
