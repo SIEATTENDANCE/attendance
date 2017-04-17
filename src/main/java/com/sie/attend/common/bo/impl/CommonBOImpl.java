@@ -38,8 +38,14 @@ public class CommonBOImpl implements CommonBO {
 	}
 
 	@Override
-	public int updateOne(String string, Map<String, Object> params) {
-		return this.commonDao.getSession().update(string, params);
+	public int updateOne(String sqlId, Map<String, Object> params) {
+		return this.commonDao.getSession().update(sqlId, params);
+	}
+
+	@Override
+	public int deleteOne(String sqlId, Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return this.commonDao.getSession().delete(sqlId, params);
 	}
 
 }

@@ -26,6 +26,15 @@
 		limit
 		#{startShow},#{pageSize}
 	</select>
+	
+	
+	
+	<select id="ifRecordExit" resultType="Map" parameterType="java.util.Map">
+		select count(*)
+		from excep_change
+		where ex_empid=#{username}
+		and fload_id=#{foladNumber}
+	</select>
 
 	<select id="selectChoiceExcep" resultType="Map" parameterType="java.util.Map">
 		select emp.emp_id empid,emp.emp_name empname,rec.recd_type rectype,
@@ -39,18 +48,18 @@
 	<select id="ifCommit" resultType="Map" parameterType="java.util.Map">
 		select ex_state
 		from excep_change
-		where fload_id={ExceptionFloadId}
+		where fload_id=#{ExceptionFloadId}
 	</select>
 	
 	
 	<update id="updatetExceptionState"  parameterType="java.util.Map">
 		update excep_change
 		set ex_state=#{ex_state}
-		where fload_id={ExceptionFloadId}
+		where fload_id=#{ExceptionFloadId}
 	</update>
 	
 	
-	<insert id="insertExceptionDetal" parameterType="java.util.Map">
+	<insert id="insertExceptionDetail" parameterType="java.util.Map">
 		insert into
 		excep_change_det(recd_id,excep_id,reason,emp_id)
 		values(#{exId},#{fload_id},#{exReason},#{username})

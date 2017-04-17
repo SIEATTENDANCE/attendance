@@ -18,64 +18,55 @@
 	media="screen">
 <script src="../common/lib/html5.js"></script>
 <script src="../common/lib/respond.min.js"></script>
-<style type="text/css">
-.search{
-	float : left;
-	padding:10px 5px;
-}
-.search p{
-	padding-top: 3px;
-	font-size: 15px;
-	font-weight:bold;
-}
-</style>
 </head>
 <body>
 	<div class="container">
 		<h2>我的打卡记录</h2>
-		<hr>
+		<hr style="background-color: red; height: 1px">
 		<button type="button" class="btn btn-primary" id="btn1">签到</button>
 		<button type="button" class="btn btn-primary" id="btn2">签退</button>
-		<br>
-		<!-- 起始时间 -->
-		<div class="search" ><p>日期:</p></div>
-		<div class="input-group date form_date search" data-date=""
-			data-date-format="yyyy-mm-dd" style="width:150px">
-			<input class="form-control" id="startDay" size="8" type="text"
-				readonly> <span class="input-group-addon"><span
-				class="glyphicon glyphicon-calendar"></span></span>
-		</div>
-
-		<!-- 结束时间 -->
-		<div class="search" ><p>至</p></div>
-		<div class="input-group date form_date search" data-date=""
-			data-date-format="yyyy-mm-dd" style="width:150px">
-			<input class="form-control" id="endDay" size="8" type="text"
-				readonly> <span class="input-group-addon"><span
-				class="glyphicon glyphicon-calendar"></span></span>
-		</div>
-
-		<!-- 状态 -->
-		<div class="dropdown search">
-			<label>&nbsp;状态：</label>
-			<button class="btn btn-default dropdown-toggle" type="button"
-				id="signState" data-toggle="dropdown" aria-haspopup="true"
-				aria-expanded="true">
-				全部 <span class="caret"></span>
-			</button>
-			<ul class="dropdown-menu" aria-labelledby="signState"
-				id="signStateList">
-				<li><a href="#">全部</a></li>
-				<li><a href="#">出勤</a></li>
-				<li><a href="#">迟到</a></li>
-				<li><a href="#">早退</a></li>
-				<li><a href="#">旷工</a></li>
-				<!-- <li><a href="#">异常</a></li> -->
-			</ul>
-		</div>
-		<div class="search">
-			<button type="submit" class="btn btn-default" id="submit">查询</button>
-		</div>
+		<br><label></label>
+		<form class="form-inline">
+			<!-- 起始时间 -->
+			<div class="form-group">
+				<label>日期：</label>
+				<div class="input-group date form_date" data-date=""
+					data-date-format="yyyy-mm-dd">
+					<input class="form-control" id="startDay" size="8" type="text"
+						readonly> <span class="input-group-addon"><span
+						class="glyphicon glyphicon-calendar"></span></span>
+				</div>
+			</div>
+			<!-- 结束时间 -->
+			<div class="form-group">
+				<label>&nbsp;至&nbsp;</label>
+				<div class="input-group date form_date" data-date=""
+					data-date-format="yyyy-mm-dd">
+					<input class="form-control" id="endDay" size="8" type="text"
+						readonly> <span class="input-group-addon"><span
+						class="glyphicon glyphicon-calendar"></span></span>
+				</div>
+			</div>
+			<!-- 状态 -->
+			<div class="form-group dropdown">
+				<label>&nbsp;状态：</label>
+				<button class="btn btn-default dropdown-toggle" type="button"
+					id="signState" data-toggle="dropdown" aria-haspopup="true"
+					aria-expanded="true">
+					全部 <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" aria-labelledby="signState"
+					id="signStateList">
+					<li><a href="#">出勤</a></li>
+					<li><a href="#">迟到</a></li>
+					<li><a href="#">早退</a></li>
+					<li><a href="#">旷工</a></li>
+					<li><a href="#">异常</a></li>
+				</ul>
+			</div>
+			&nbsp;&nbsp;&nbsp;
+			<button class="btn btn-default" type="submit" id="submit">查询</button>
+		</form>
 		<!-- 表格 -->
 		<table id="cusTable"></table>
 	</div>
@@ -117,6 +108,7 @@
 		  }
 		});
 
+		tableInit();
 		//点击查询按钮时初始化表格
 		$('#submit').click(tableInit);
 
@@ -148,12 +140,11 @@
 		    method:'post', //服务器数据的请求方式
 		    cache:false, //禁用 AJAX 数据缓存
 		    contentType:'application/x-www-form-urlencoded', //发送到服务器的数据编码类型
+		    striped: true, //隔行变色效果
 		    pagination:true, //在表格底部显示分页条
 		    pageNumber: 1, //页码
 		    pageSize: 5, //数据条数
 		    pageList:[2,5,10,20],
-		    showColumns: true, //是否显示所有的列
-		    minimumCountColumns: 3, //最少允许的列数
 		    showRefresh:true, //是否显示刷新按钮
 		    sidePagination:'server', //服务器分页
 		    dataType:'json', //服务器返回的数据类型

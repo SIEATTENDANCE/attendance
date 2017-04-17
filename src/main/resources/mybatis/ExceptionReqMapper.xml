@@ -3,18 +3,53 @@
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sie.data.ExceptionRequest">
 	<select id="selectException" resultType="Map" parameterType="java.util.Map">
-		select exc.id,exc.fload_id,exc.ex_createtime,exc.ex_state,exc.ex_dealtime
+		select
+		exc.id,exc.fload_id,exc.ex_createtime,exc.ex_state,exc.ex_dealtime
 		from excep_change exc
 		where exc.ex_empid=#{username}
-		and exc.ex_createtime between #{showStartTime} and #{showEndTime}
+		and
+		exc.ex_createtime between #{showStartTime} and #{showEndTime}
 		<if test="exceptionNum!=null and exceptionNum!=''">
 			and exc.fload_id=#{exceptionNum}
 		</if>
-		and exc.ex_state=#{exceptionState}	
+		and exc.ex_state=#{exceptionState}
 	</select>
-	
-	<select id="selectExceptionRecord" resultType="Map" parameterType="java.util.Map">
-			
+
+	<select id="selectExceptionRecord" resultType="Map"
+		parameterType="java.util.Map">
+		select
+		exc.fload_id,att.att_src,exc.office_deal,exc.dept_deal,exc.note
+		from
+		excep_change exc,attachment att
+		where
+		exc.fload_id=#{exceptionNum}
+		and
+		att.exc_cha_id=exc.id
 	</select>
+
+	<select id="selectExceptionRecordDetail" resultType="Map"
+		parameterType="java.util.Map">
+		select
+		emp.emp_id,emp.emp_name,rec.date,rec.work_state,exc.reason
+		from
+		excep_change_det exc,employee emp,record rec
+		where
+		exc.excep_id=#{exceptionNum}
+		and exc.recd_id=rec.id
+		and
+		emp.emp_id=rec.emp_id
+	</select>
+
+	<delete id="deleteExceptionRecord">
+		delete
+		from excep_change
+		where fload_id=#{exceptionNum}
+	</delete>
+
+	<delete id="deleteExceptionRecordDetail">
+		delete
+		from excep_change_det
+		where excep_id=#{exceptionNum}
+	</delete>
 
 </mapper>

@@ -32,9 +32,13 @@ public class TestTime {
 /*		for(int i=1;i<=50;i++){
             System.out.printf("%03d\n", i); 
 }*/
-		/*System.out.println(FloadNumber.getFloadNumber("2017-04-13", "15:20:30"));*/
+		System.out.println(FloadNumber.getFloadNumber("2017-04-13", "15:20:30"));
 		
-		String excepChange="12&你好-13&很好-18&非常好";
+		
+		
+		
+		
+/*		String excepChange="12&你好-13&很好-18&非常好";
 		
 		String exId=null;
 		String exReason=null;
@@ -46,7 +50,7 @@ public class TestTime {
 				exReason=idAndreason[1];
 				System.out.println("分割出来后的数据"+exId+":"+exReason);
 		}
-		
+		*/
 		
 		
 		

@@ -14,6 +14,8 @@ public interface CommonBO {
 	
 	public int insertOne(String sqlId, Map<String, Object> params);
 	public int updateOne(String string, Map<String, Object> params);
+	public int deleteOne(String string, Map<String, Object> params);
+
 /*	
 	//签到模块业务
 	public List<Map<String, String>> selectSignRecord(String sqlId, Map<String, Object> params);//查询单个人的签到记录

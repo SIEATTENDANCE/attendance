@@ -21,6 +21,24 @@
 		<button type="button" class="btn btn-primary" id="btn1">签到</button>
 		<button type="button" class="btn btn-primary" id="btn2">签退</button>
 		<br> <label></label>
+
+
+		<form class="form-horizontal">
+			<div class="form-group">
+				<label class="col-sm-2 control-label">Email</label>
+				<div class="col-sm-3">
+					<input type="email" class="form-control" id="inputEmail3"
+						placeholder="Email">
+				</div>
+				<label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+				<div class="col-sm-3">
+					<input type="password" class="form-control" id="inputPassword3"
+						placeholder="Password">
+				</div>
+			</div>
+		</form>
+
+
 		<form class="form-inline">
 			<!-- 起始时间 -->
 			<div class="form-group">
@@ -75,36 +93,46 @@
 <script src="../bootstrap/js/bootstrap-table.min.js"></script>
 <script src="../bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
 <script>
-$(document).ready(function() {
-	//初始化查询时间
-	$('#startDay').val(new Date(new Date().getTime() - 604800000).Format("yyyy-MM-dd"));
-	$('#endDay').val(new Date().Format("yyyy-MM-dd"));
+	$(document).ready(
+			function() {
+				//初始化查询时间
+				$('#startDay').val(
+						new Date(new Date().getTime() - 604800000)
+								.Format("yyyy-MM-dd"));
+				$('#endDay').val(new Date().Format("yyyy-MM-dd"));
 
-	//获取下拉菜单中的内容并显示
-	$('#signStateList li').on('click',function() {
-		$('#signState').html($(this).text() + '<span class="caret"></span>');
-	});
+				//获取下拉菜单中的内容并显示
+				$('#signStateList li').on(
+						'click',
+						function() {
+							$('#signState').html(
+									$(this).text()
+											+ '<span class="caret"></span>');
+						});
 
-	//对起始时间和截止时间进行限制
-	$("#startDay").change(function() {
-		if ($('#startDay').val() > (new Date().Format("yyyy-MM-dd"))) {
-			alert("起始时间不能超过今天");
-			$('#startDay').val(new Date().Format("yyyy-MM-dd"));
-		}
-	});
-	$("#endDay").change(function() {
-		if ($('#startDay').val() > $('#endDay').val()) {
-			alert("截止时间不能小于起始时间");
-			$('#endDay').val(new Date().Format("yyyy-MM-dd"));
-		}
-	});
-	
-	 //调用函数，初始化表格  
-    initTable();  
+				//对起始时间和截止时间进行限制
+				$("#startDay").change(
+						function() {
+							if ($('#startDay').val() > (new Date()
+									.Format("yyyy-MM-dd"))) {
+								alert("起始时间不能超过今天");
+								$('#startDay').val(
+										new Date().Format("yyyy-MM-dd"));
+							}
+						});
+				$("#endDay").change(function() {
+					if ($('#startDay').val() > $('#endDay').val()) {
+						alert("截止时间不能小于起始时间");
+						$('#endDay').val(new Date().Format("yyyy-MM-dd"));
+					}
+				});
 
-    //当点击查询按钮的时候执行  
-    $("#search").bind("click", initTable);  
-});
+				//调用函数，初始化表格  
+				initTable();
+
+				//当点击查询按钮的时候执行  
+				$("#search").bind("click", initTable);
+			});
 
 	//初始化表格
 	function initTable() {
@@ -114,7 +142,7 @@ $(document).ready(function() {
 		$("#cusTable").bootstrapTable({
 			url : '../signIn/getUserSignRecord', //请求后台的URL
 			method : 'POST', //请求方式
-			contentType:"application/x-www-form-urlencoded; charset=UTF-8",
+			contentType : "application/x-www-form-urlencoded; charset=UTF-8",
 			toolbar : "#submit", //工具按钮用哪个容器
 			striped : true, //使表格带有条纹
 			pagination : true, //在表格底部显示分页工具栏
@@ -155,7 +183,7 @@ $(document).ready(function() {
 				};
 				return param;
 			}
-			
+
 		});
 	};
 

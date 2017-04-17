@@ -3,8 +3,8 @@ package com.sie.attend.util;
 public class FloadNumber {
 	
 	public static String getFloadNumber(String date,String time){
-		
-		String flad="YCBG"+date.replace("-", "")+time.replace(":","");
+		String ctime=time.replace(":","");
+		String flad="YCBG"+date.replace("-", "")+ctime.substring(0,ctime.length()-2);
 		return flad;
 		
 	}

@@ -28,18 +28,18 @@
 	<bean class="com.sie.attend.exception.CustomExceptionResolver"></bean>
 
 	<!-- 拦截器的配置 -->
-	<mvc:interceptors>
-		<!-- 在 mvc:interceptors中可以配置多个拦截器 多个拦截器按顺序一一执行 -->
+<!-- 	<mvc:interceptors>
+		在 mvc:interceptors中可以配置多个拦截器 多个拦截器按顺序一一执行
 		<mvc:interceptor>
 			<mvc:mapping path="/**" />
 			<mvc:exclude-mapping path="/common/**"/>
 			<mvc:exclude-mapping path="/bootstrap/**"/>
 			<mvc:exclude-mapping path="/**/*.do"/>
 			<mvc:exclude-mapping path="/**/login.html" />
-			<!-- 指定拦截器的位置 -->
+			指定拦截器的位置
 			<bean class="com.sie.attend.interceptor.LoginInterceptor"></bean>
 		</mvc:interceptor>
-	</mvc:interceptors>
+	</mvc:interceptors> -->
 
 	
 </beans>
