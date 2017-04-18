@@ -238,12 +238,18 @@
 
 		});
 	}
-	//获取多选框ID
+	//获取选择行的流水单号
 	function getIdSelections() {
          return $.map($('#cusTable').bootstrapTable('getSelections'), function(row) {
-             return row.id;
+             return row.fload_id;
          });
-     } 
+     }
+	//获取选择行的申请单状态
+	function getStateSelections() {
+        return $.map($('#cusTable').bootstrapTable('getSelections'), function(row) {
+            return row.ex_state;
+        });
+    } 
 	// JSON.stringify($('#cusTable').bootstrapTable('getSelections'))
 	
 	//初始化按钮组件
@@ -251,36 +257,36 @@
 		$('#submit').click(tableInit);
 		$('#reset').click(dataInit);
 		$('#btn_add').click(function(){
-			window.location.href="success.html";
+			window.location.href="exceptionReqForm.html";
 		});
 		$('#btn_edit').click(function() {
-			var selectIndex = getIdSelections();
-			if(selectIndex.length == 0){
-				alert("请选择内容");
+			var exceptionNum = getIdSelections().toString();
+			var ex_state = getStateSelections().toString();
+			if(exceptionNum.length == 0){
+				alert("请选择要编辑的数据");
 			}else{
-				alert(selectIndex);
-				$.post("../rest/test/testId",{"id":JSON.stringify(selectIndex)},
-					function(data){
-						alert(data.id);
-					}		
-				);
-				/* $.ajax({
-					   type: "POST",
-					   url: "../rest/test/testId",
-					   data: {"id":selectIndex},
-					   traditional: true,
-					   success: function(msg){
-					     alert( "Data Saved: " + msg.id );
-					   }
-					}); */
+				if(ex_state == 'new'){
+					window.location.href="exceptionReqForm.html?exceptionNum=" + exceptionNum;
+				}else{
+					alert('请选择状态为新增的记录进行编辑');
+				}
 			}
 		});
 		$('#btn_delete').click(function(){
-			var selectIndex = getIdSelections();
-			if(selectIndex.length == 0){
-				alert("请选择内容");
+			var exceptionNum = getIdSelections().toString();
+			var ex_state = getStateSelections().toString();
+			if(exceptionNum.length == 0){
+				alert("请选择要删除的数据");
 			}else{
-				
+				if(ex_state == 'new'){
+					$.post("../rest/ExceptionRequest/deleteExceptionRecord", 
+						{"exceptionNum" : exceptionNum}, 
+						function(data) {
+							alert(data.result);
+						});
+				}else{
+					alert('请选择状态为新增的记录进行删除');
+				}
 			}
 		});
 	};

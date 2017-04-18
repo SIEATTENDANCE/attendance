@@ -32,7 +32,7 @@ public class TestTime {
 /*		for(int i=1;i<=50;i++){
             System.out.printf("%03d\n", i); 
 }*/
-		System.out.println(FloadNumber.getFloadNumber("2017-04-13", "15:20:30"));
+		//System.out.println(FloadNumber.getFloadNumber("2017-04-13", "15:20:30"));
 		
 		
 		
@@ -51,7 +51,9 @@ public class TestTime {
 				System.out.println("分割出来后的数据"+exId+":"+exReason);
 		}
 		*/
+		String exceptionNum="[\"YCBG20170410002\"]";
 		
+		System.out.println(exceptionNum.substring(2, exceptionNum.length()-2));
 		
 		
 		

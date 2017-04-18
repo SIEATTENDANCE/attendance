@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+<title>异常记录</title>
+
+<!-- Bootstrap -->
+<link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet"
+	media="screen">
+<!-- 导入表格插件css -->
+<link href="../bootstrap/css/bootstrap-table.min.css" rel="stylesheet"
+	media="screen">
+<script src="../common/lib/html5.js"></script>
+<script src="../common/lib/respond.min.js"></script>
+</head>
+
+<body>
+	<div class="container">
+		<table id="cusTable"></table>
+		<div align="center">
+			<button type="submit" class="btn btn-default" id="submit">确定</button>
+			<button type="button" class="btn btn-default" id="exit">关闭</button>
+		</div>
+	</div>
+</body>
+
+<script src="../bootstrap/jquery.min.js"></script>
+<script src="../bootstrap/js/bootstrap.min.js"></script>
+<!-- 导入表格插件 -->
+<script src="../bootstrap/js/bootstrap-table.min.js"></script>
+<script src="../bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+<script type="text/javascript">
+	$(function() {
+		tableInit();
+		$('#submit').click(function() {
+			var choiceRecordId = getIdSelections().toString();
+			alert('选择行：' + choiceRecordId);
+			$.post("../rest/test/testId", {
+				"choiceRecordId" : choiceRecordId
+			}, function(data) {
+				var html="";
+				var size = data.length;
+				for(var i=0;i<size;i++){
+					html+="<tr><td>"+data[i].emp_id+"</td><td>"+data[i].emp_name+"</td><td>"+data[i].date+"</td><td>"+data[i].work_state+"</td><td><input type='text' class='reason' value='"+data[i].reason+"'</td></tr>";
+				}
+				$("#exceRecords").append(html);
+				window.close();
+			});
+		});
+		$('#exit').click(function() {
+			window.close();
+		});
+
+	});
+
+	//表格初始化
+	var tableInit = function() {
+		//创建表格
+		$('#cusTable').bootstrapTable({
+			url : '../rest/ExceptionChange/selectExceptionRecord', //服务器数据的加载地址
+			method : 'post', //服务器数据的请求方式
+			cache : false, //禁用 AJAX 数据缓存
+			contentType : 'application/x-www-form-urlencoded', //发送到服务器的数据编码类型
+			striped : true, //隔行变色效果
+			pagination : true, //在表格底部显示分页条
+			pageNumber : 1, //页码
+			pageSize : 5, //数据条数
+			pageList : [ 2, 5, 10, 20 ],
+			clickToSelect : true, //是否启用点击选中行
+			sidePagination : 'client', //服务器分页
+			sortName : "recdate", //根据日期进行排序
+			sortOrder : "desc",
+			dataType : 'json', //服务器返回的数据类型
+			queryParamsType : 'undefined', //设置为 'limit' 则会发送符合 RESTFul 格式的参数，必须包含offset,limit
+			//设置为'undefined'，则可以发pageNumber，pageSize等参数
+			columns : [ {
+				checkbox : true
+			}, {
+				field : 'empid',
+				title : '工号'
+			}, {
+				field : 'empname',
+				title : '姓名'
+			}, {
+				field : 'rectype',
+				title : '类型',
+				formatter : function(value, row, index) {
+					if (value == 'signin') {
+						value = "签到";
+					} else {
+						value = "签退";
+					}
+					return value;
+				}
+			}, {
+				field : 'recdate',
+				title : '日期'
+			}, {
+				field : 'rectime',
+				title : '时间'
+			}, {
+				field : 'workstate',
+				title : '状态',
+				formatter : function(value, row, index) {
+					switch (value) {
+					case 'normal':
+						value = '出勤';
+						break;
+					case 'late':
+						value = '迟到';
+						break;
+					case 'early':
+						value = '早退';
+						break;
+					case 'nowork':
+						value = '旷工';
+						break;
+					}
+					return value;
+				}
+			} ]
+		});
+	}
+	//获取选择行的id
+	function getIdSelections() {
+		return $.map($('#cusTable').bootstrapTable('getSelections'), function(
+				row) {
+			return row.id;
+		});
+	}
+</script>
+</html>

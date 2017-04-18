@@ -6,7 +6,5 @@ public class FloadNumber {
 		String ctime=time.replace(":","");
 		String flad="YCBG"+date.replace("-", "")+ctime.substring(0,ctime.length()-2);
 		return flad;
-		
 	}
-
 }

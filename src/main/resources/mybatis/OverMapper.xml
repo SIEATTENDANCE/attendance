@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sie.data.Over">
+	<select id="selectException" resultType="Map" parameterType="java.util.Map">
+		select
+		exc.id,exc.fload_id,exc.ex_createtime,exc.ex_state,exc.ex_dealtime
+		from excep_change exc
+		where exc.ex_empid=#{username}
+		and
+		exc.ex_createtime between #{showStartTime} and #{showEndTime}
+		<if test="exceptionNum!=null and exceptionNum!=''">
+			and exc.fload_id=#{exceptionNum}
+		</if>
+		and exc.ex_state=#{exceptionState}
+	</select>
+
+
+</mapper>

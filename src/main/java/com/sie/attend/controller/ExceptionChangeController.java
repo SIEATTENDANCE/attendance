@@ -97,10 +97,15 @@ public class ExceptionChangeController {
 	@RequestMapping(value = { "/commitExceptionChange" }, method = { RequestMethod.POST}, produces = { "application/json" })
 	public Map<String, Object> commitExceptionChange(HttpServletRequest request) {	
 		String ExceptionFloadId = request.getParameter("ExceptionFloadId");//异常申请单的流水号
+		SimpleDateFormat dateStyle = new SimpleDateFormat("yyyy-MM-dd");
+		String date = dateStyle.format(new Date());
 		//String ExceptionFloadId="YCBG20170410003";//测试数据
+		
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("ExceptionFloadId", ExceptionFloadId);
 		params.put("ex_state", "commit");
+		params.put("ex_node", "new");
+		params.put("date", date);
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		//先判断有没有保存,保存了才能提交
 		Map<String, Object> ifCommit=this.commonBO.selectOne("com.sie.data.ExceptionChange.ifCommit",params);
@@ -129,12 +134,21 @@ public class ExceptionChangeController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		//先判断有没有提交,提交了才能中止
 		Map<String, Object> ifCommit=this.commonBO.selectOne("com.sie.data.ExceptionChange.ifCommit",params);
-		if (!(ifCommit.get("ex_state").toString().equals("commit"))) {
+		if ((ifCommit.get("ex_state").toString().equals("commit"))) {
 			resultMap.put("result", "异常订单还没有提交,不能中止");
-			if(ifCommit.get("ex_state").toString().equals("stop")){
-				resultMap.put("result", "异常订单已经被中止了");			
-			}
 			return resultMap;
+		}else if (ifCommit.get("ex_state").toString().equals("stop")) {
+			resultMap.put("result", "异常订单已经被中止了");	
+			return resultMap;
+		}else if (ifCommit.get("ex_state").toString().equals("over")) {
+			resultMap.put("result", "异常订单完成了");	
+			return resultMap;
+		}else {
+			if (!(ifCommit.get("ex_node").toString().equals("new"))) {
+				resultMap.put("result", "异常订单在审核,不能中止了");
+				return resultMap;
+			}		
+			
 		}
 		//更新异常表的ex_state字段
 		int upResult=this.commonBO.updateOne("com.sie.data.ExceptionChange.updatetExceptionState",params);	
@@ -166,6 +180,7 @@ public class ExceptionChangeController {
 		params.put("startShow", startShow);
 		params.put("pageSize", pageSize);
 		List<Map<String, Object>> exceptionRecord = this.commonBO.selectList("com.sie.data.ExceptionChange.selectExceptionRecord",params);	
+		
 		return exceptionRecord;
 	}
 	

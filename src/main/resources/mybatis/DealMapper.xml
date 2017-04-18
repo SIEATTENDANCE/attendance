@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sie.data.Deal">
+	<select id="selectException" resultType="Map" parameterType="java.util.Map">
+		select
+		exc.fload_id,exc.ex_node,emp.emp_name,exc.ex_createtime
+		from excep_change exc,employee emp
+		where exc.ex_empid=emp.emp_id
+		and exc.ex_createtime between #{showStartTime} and #{showEndTime}
+		<if test="selectWho!=null and selectWho!=''">
+			and emp.emp_name=#{selectWho}
+		</if>
+		and exc.ex_node=#{ex_node}
+		order by exc.ex_createtime desc
+		limit
+		#{startShow},#{pageSize}
+	</select>
+	
+	<select id="selectEmpRole" resultType="Map" parameterType="java.util.Map">
+		select role.name
+		from employee emp,emp_role empr,role
+		where emp.emp_id=#{emp_id}
+		and emp.id=empr.employID
+		and empr.roleID=role.id
+	</select>
+
+
+</mapper>

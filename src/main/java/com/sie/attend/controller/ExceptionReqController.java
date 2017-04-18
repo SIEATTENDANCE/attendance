@@ -66,7 +66,6 @@ public class ExceptionReqController {
 	@RequestMapping(value = { "/editExceptionRecord" }, method = { RequestMethod.POST}, produces = { "application/json" })
 	public Map<String, Object> editExceptionRecord(HttpServletRequest request) {	
 		String exceptionNum = request.getParameter("exceptionNum");//异常申请单的流水号
-		
 		//测试数据
 		//String exceptionNum="YCBG20170410002";
 		
@@ -78,8 +77,19 @@ public class ExceptionReqController {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("exceptionNum", exceptionNum);
 		//点击编辑后,查询出异常订单以及订单下的异常打卡记录
-		Map<String, Object> ExceptionRecord=this.commonBO.selectOne("com.sie.data.ExceptionRequest.selectExceptionRecord",params);
+		//先判断有没有附件
+		Map<String, Object> ifAttach=this.commonBO.selectOne("com.sie.data.ExceptionRequest.selectifAttach",params);
+		//System.out.println("判断情况");
+		//System.out.println(ifAttach.get("count(*)").equals("0"));
+		List<Map<String, Object>>  ExceptionAttach=null;
+		if(!(ifAttach.get("count(*)").equals("0"))){
+			//有附件
+			  ExceptionAttach=this.commonBO.selectList("com.sie.data.ExceptionRequest.selectExceptionAttach",params);
+		}
+		Map<String, Object>  ExceptionRecord=this.commonBO.selectOne("com.sie.data.ExceptionRequest.selectExceptionNoAtt",params);
 		List<Map<String, Object>> ExceptionRecordDetail=this.commonBO.selectList("com.sie.data.ExceptionRequest.selectExceptionRecordDetail",params);
+		
+		resultMap.put("ExceptionAttach", ExceptionAttach);
 		resultMap.put("resultMap", ExceptionRecord);
 		resultMap.put("resultList", ExceptionRecordDetail);
 		return resultMap;

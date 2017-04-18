@@ -94,7 +94,8 @@ public class LoginController {
 	@RequestMapping(value={"/getMenuMess"},method={RequestMethod.POST},produces={"application/json"})
 	public List<Map<String,Object>> getMenuMess(HttpServletRequest request){
 		Map<String,Object> map = new HashMap<String,Object>(1);
-		String emp_id = request.getParameter("emp_id");
+		HttpSession session = request.getSession();
+		String emp_id = (String) session.getAttribute("emp_id");
 		map.put("emp_id", emp_id);
 		List<Map<String,Object>> list = this.commonBO.selectList("com.sie.attend.pojo.LoginMapper.selectMenuByEmpId", map);
 		//System.out.println(list);
@@ -109,7 +110,8 @@ public class LoginController {
 	@RequestMapping(value={"/getEmpMess"},method=RequestMethod.POST,produces={"application/json"})
 	public Map<String,Object> getEmpMess(HttpServletRequest request){
 		Map<String,Object> map = new HashMap<String,Object>(5);
-		String emp_id = request.getParameter("emp_id");
+		HttpSession session = request.getSession();
+		String emp_id = (String) session.getAttribute("emp_id");
 		map.put("emp_id", emp_id);
 		map = this.commonBO.selectOne("com.sie.attend.pojo.LoginMapper.selectByEmpId", map);
 		return map;
@@ -123,12 +125,10 @@ public class LoginController {
 	public Map<String,Object> quitEmp(HttpServletRequest request){
 		Map<String , Object> quitMess = new HashMap<String, Object>(1);
 		quitMess.put("quitMess", 1);
-		
 		HttpSession session = request.getSession(false);//防止创建Session  
 		if(session == null){  
 			return quitMess;  
 		}  
-       
 		session.removeAttribute("emp_id");  //去除userMess中的session
 		return quitMess;  
 	}

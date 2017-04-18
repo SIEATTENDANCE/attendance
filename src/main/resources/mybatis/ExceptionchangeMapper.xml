@@ -46,7 +46,7 @@
 		order by rec.date desc
 	</select>
 	<select id="ifCommit" resultType="Map" parameterType="java.util.Map">
-		select ex_state
+		select ex_state,ex_node
 		from excep_change
 		where fload_id=#{ExceptionFloadId}
 	</select>
@@ -54,7 +54,7 @@
 	
 	<update id="updatetExceptionState"  parameterType="java.util.Map">
 		update excep_change
-		set ex_state=#{ex_state}
+		set ex_state=#{ex_state},ex_node=#{ex_node},ex_createtime=#{date}
 		where fload_id=#{ExceptionFloadId}
 	</update>
 	
