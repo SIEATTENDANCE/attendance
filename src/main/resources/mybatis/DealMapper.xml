@@ -24,6 +24,18 @@
 		and emp.id=empr.employID
 		and empr.roleID=role.id
 	</select>
+	
+	<update id="updatetExceptionState" parameterType="java.util.Map">
+		update 
+		excep_change
+		<if test="roleName='off'">
+			set ex_dealtime=#{date},office_deal=#{reason},ex_node='off'
+		</if>
+		<if test="roleName='dep'">
+			set ex_dealtime=#{date},dept_deal=#{reason},ex_node='dep'
+		</if>
+		where fload_id=#{ExceptionFloadId}
+	</update>
 
 
 </mapper>

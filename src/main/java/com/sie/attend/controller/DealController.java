@@ -68,7 +68,7 @@ public class DealController {
 		return DealException;
 	}
 	
-	
+	/*
 	//点击审核按钮后触发
 	@RequestMapping(value = { "/checkException" }, method = { RequestMethod.POST}, produces = { "application/json" })
 	public Map<String, Object> editExceptionRecord(HttpServletRequest request) {	
@@ -100,34 +100,33 @@ public class DealController {
 		resultMap.put("resultMap", ExceptionRecord);
 		resultMap.put("resultList", ExceptionRecordDetail);
 		return resultMap;
-	}
-	//点击审核通过按钮触发
+	}*/
+	
+	
+	
+	//点击审核通过按钮触发,还要传一个属于哪个角色roleName
 		@RequestMapping(value = { "/passException" }, method = { RequestMethod.GET}, produces = { "application/json" })
 		public Map<String, Object> commitExceptionChange(HttpServletRequest request) {	
 			String ExceptionFloadId = request.getParameter("ExceptionFloadId");//异常申请单的流水号
-			
 			SimpleDateFormat dateStyle = new SimpleDateFormat("yyyy-MM-dd");
-			String date = dateStyle.format(new Date());
+			String date = dateStyle.format(new Date());//需要审核通过的日期
 			//String ExceptionFloadId="YCBG20170410003";//测试数据
-			
 			Map<String, Object> params = new HashMap<String, Object>();
+			String reason = request.getParameter("reason");//部门或者科室的审批意见
+			String roleName = request.getParameter("roleName");//判断属于那个角色
+			
 			params.put("ExceptionFloadId", ExceptionFloadId);
-			params.put("ex_state", "commit");
-			params.put("ex_node", "new");
 			params.put("date", date);
+			params.put("roleName", roleName);
+			params.put("reason", reason);
+			
 			Map<String, Object> resultMap = new HashMap<String, Object>();
-			//先判断有没有保存,保存了才能提交
-			Map<String, Object> ifCommit=this.commonBO.selectOne("com.sie.data.ExceptionChange.ifCommit",params);
-			if (!(ifCommit.get("ex_state").toString().equals("new"))) {
-				resultMap.put("result", "请先保存订单");
-				return resultMap;
-			}	
-			//更新异常表的ex_state字段
-			int upResult=this.commonBO.updateOne("com.sie.data.ExceptionChange.updatetExceptionState",params);	
+			//更新审核状态字段
+			int upResult=this.commonBO.updateOne("com.sie.data.Deal.updatetExceptionState",params);	
 			if(upResult!=0){
-			resultMap.put("result", "提交成功");
+			resultMap.put("result", "审核成功");
 			}else {
-				resultMap.put("result", "提交失败");
+				resultMap.put("result", "审核失败");
 			}
 			return resultMap;
 		}

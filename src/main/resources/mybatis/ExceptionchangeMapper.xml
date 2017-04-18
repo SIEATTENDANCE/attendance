@@ -26,47 +26,64 @@
 		limit
 		#{startShow},#{pageSize}
 	</select>
-	
-	
-	
+
+
+
 	<select id="ifRecordExit" resultType="Map" parameterType="java.util.Map">
-		select count(*)
+		select
+		count(*)
 		from excep_change
 		where ex_empid=#{username}
-		and fload_id=#{foladNumber}
+		and
+		fload_id=#{foladNumber}
 	</select>
 
 	<select id="selectChoiceExcep" resultType="Map" parameterType="java.util.Map">
 		select emp.emp_id empid,emp.emp_name empname,rec.recd_type rectype,
 		rec.date recdate,rec.work_state workstate,rec.id
-		from employee emp,record rec
+		from employee
+		emp,record rec
 		where
 		emp.emp_id=rec.emp_id
 		and rec.id=#{choice}
-		order by rec.date desc
+		order by
+		rec.date desc
 	</select>
 	<select id="ifCommit" resultType="Map" parameterType="java.util.Map">
-		select ex_state,ex_node
+		select
+		ex_state,ex_node
 		from excep_change
 		where fload_id=#{ExceptionFloadId}
 	</select>
-	
-	
-	<update id="updatetExceptionState"  parameterType="java.util.Map">
-		update excep_change
-		set ex_state=#{ex_state},ex_node=#{ex_node},ex_createtime=#{date}
-		where fload_id=#{ExceptionFloadId}
+
+
+	<update id="updatetExceptionState" parameterType="java.util.Map">
+		update
+		excep_change
+		set
+		ex_state=#{ex_state},ex_node=#{ex_node},ex_createtime=#{date}
+		where
+		fload_id=#{ExceptionFloadId}
 	</update>
-	
-	
+
+
 	<insert id="insertExceptionDetail" parameterType="java.util.Map">
 		insert into
 		excep_change_det(recd_id,excep_id,reason,emp_id)
 		values(#{exId},#{fload_id},#{exReason},#{username})
-		
+
 	</insert>
-	
-	
-	
-	
+	<select id="selectExceptionRecordCount" resultType="Map">
+		select
+		count(*)
+		from record rec
+		where
+		rec.emp_id=#{username}
+		and
+		rec.work_state='nowork'
+		and rec.show="true"
+	</select>
+
+
+
 </mapper>

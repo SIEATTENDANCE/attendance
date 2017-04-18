@@ -62,6 +62,7 @@ public class ExceptionReqController {
 		return exceptionRecord;
 	}
 	
+/*	
 	//点击编辑按钮后触发
 	@RequestMapping(value = { "/editExceptionRecord" }, method = { RequestMethod.POST}, produces = { "application/json" })
 	public Map<String, Object> editExceptionRecord(HttpServletRequest request) {	
@@ -94,6 +95,7 @@ public class ExceptionReqController {
 		resultMap.put("resultList", ExceptionRecordDetail);
 		return resultMap;
 	}
+	*/
 	
 	//点击删除按钮后触发
 	@RequestMapping(value = { "/deleteExceptionRecord" }, method = { RequestMethod.POST}, produces = { "application/json" })

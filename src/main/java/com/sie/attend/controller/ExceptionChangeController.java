@@ -42,7 +42,7 @@ public class ExceptionChangeController {
 		
 		String excepChange=request.getParameter("excepChange");//获取到的是要申请的异常串,操作明细表
 		
-		String exc_cha_id = request.getParameter("exc_cha_id");//获取附件的地址,操作附件表
+		//String exc_cha_id = request.getParameter("exc_cha_id");//获取附件的地址,操作附件表
 
 		String note = request.getParameter("note");//获取备注信息
 		HttpSession session = request.getSession();// 获取用户信息
@@ -52,8 +52,6 @@ public class ExceptionChangeController {
 		/*String excepChange="1&原因1-2&原因2-3&原因3";
 		String username="123";
 		String note="写入备注信息";*/
-		
-		
 		String foladNumber=FloadNumber.getFloadNumber(date,time);//得到一个流水号
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("fload_id", foladNumber);
@@ -162,26 +160,27 @@ public class ExceptionChangeController {
 	
 	//查询异常记录,点击+号按钮触发弹出所有异常记录
 	@RequestMapping(value = { "/selectExceptionRecord" }, method = { RequestMethod.POST}, produces = { "application/json" })
-	public List<Map<String, Object>> selectExceptionRecord(HttpServletRequest request) {	
-		int showPage = 1;// 默认第一页
-		int pageSize = 5;// 默认显示5条记录
+	public Map<String, Object> selectExceptionRecord(HttpServletRequest request) {	
 		
 		HttpSession session = request.getSession();// 获取用户信息
 		String username = (String) session.getAttribute("emp_id");
-		showPage = Integer.parseInt(request.getParameter("showPage"));// 当第几页
-		pageSize = Integer.parseInt(request.getParameter("pageSize"));//每一页多少数据
+		int showPage = Integer.parseInt(request.getParameter("pageNumber"));// 当第几页
+		int pageSize = Integer.parseInt(request.getParameter("pageSize"));//每一页多少数据
 		
 		//测试数据
 		//String username="123";
 		
 		int startShow = (showPage - 1) * pageSize;//分页计算
-		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> params = new HashMap<String, Object>(3);
 		params.put("username", username);
 		params.put("startShow", startShow);
 		params.put("pageSize", pageSize);
 		List<Map<String, Object>> exceptionRecord = this.commonBO.selectList("com.sie.data.ExceptionChange.selectExceptionRecord",params);	
-		
-		return exceptionRecord;
+		params = this.commonBO.selectOne("com.sie.data.ExceptionChange.selectExceptionRecordCount", params);
+		Map<String,Object> map = new HashMap<String,Object>(2);
+		map.put("total", params.get("count(*)".toString()));
+		map.put("rows", exceptionRecord);
+		return map;
 	}
 	
 	//添加异常的打卡记录后的页面点击确定触发
@@ -192,7 +191,7 @@ public class ExceptionChangeController {
 		String choiceRecordId="15-16-21";
 		*/
 		String choiceRecordId = request.getParameter("choiceRecordId");//获取备注信息
-		String[] choices=choiceRecordId.split("-");//前端传递数据的方式：id-id-id
+		String[] choices=choiceRecordId.split(",");//前端传递数据的方式：id-id-id
 		
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>> ();
 		Map<String, Object> params = new HashMap<String, Object>();

@@ -30,7 +30,7 @@
 	<select id="selectExceptionRecordDetail" resultType="Map"
 		parameterType="java.util.Map">
 		select
-		emp.emp_id,emp.emp_name,rec.date,rec.work_state,exc.reason
+		emp.emp_id,emp.emp_name,rec.date,rec.work_state,rec.recd_type,exc.reason
 		from
 		excep_change_det exc,employee emp,record rec
 		where

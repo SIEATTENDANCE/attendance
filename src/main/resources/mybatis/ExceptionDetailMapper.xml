@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sie.data.ExceptionDetail">
+	<select id="selectifAttach" resultType="Map" parameterType="java.util.Map">
+		select count(*)
+		from attachment
+		where exc_cha_id=#{exceptionNum}
+	</select>
+	<select id="selectExceptionAttach" resultType="Map"
+		parameterType="java.util.Map">
+		select
+		att_src
+		from
+		attachment
+		where
+		exc_cha_id=#{exceptionNum}
+	</select>
+	<select id="selectExceptionNoAtt" resultType="Map"
+		parameterType="java.util.Map">
+		select
+		exc.fload_id,exc.office_deal,exc.dept_deal,exc.note
+		from
+		excep_change
+		exc
+		where
+		exc.fload_id=#{exceptionNum}
+	</select>
+	<select id="selectExceptionRecordDetail" resultType="Map"
+		parameterType="java.util.Map">
+		select
+		rec.id,emp.emp_id,emp.emp_name,rec.date,rec.work_state,rec.recd_type,exc.reason
+		from
+		excep_change_det exc,employee emp,record rec
+		where
+		exc.excep_id=#{exceptionNum}
+		and exc.recd_id=rec.id
+		and
+		emp.emp_id=rec.emp_id
+	</select>
+	
+		
+	<select id="selectEmpRole" resultType="Map" parameterType="java.util.Map">
+		select role.name
+		from employee emp,emp_role empr,role
+		where emp.emp_id=#{emp_id}
+		and emp.id=empr.employID
+		and empr.roleID=role.id
+	</select>
+
+</mapper>
