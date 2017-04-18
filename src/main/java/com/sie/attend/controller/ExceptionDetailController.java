@@ -25,7 +25,7 @@ import com.sie.attend.util.FloadNumber;
  */
 @RestController // 等价于@controller加@ResponseBody
 @RequestMapping("/ExceptionDetail")
-public class ExceptionDetailController2 {
+public class ExceptionDetailController {
 
 	@Resource(name = "commonBO")
 	private CommonBO commonBO;
