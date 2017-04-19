@@ -4,16 +4,36 @@
 <mapper namespace="com.sie.data.Over">
 	<select id="selectException" resultType="Map" parameterType="java.util.Map">
 		select
-		exc.id,exc.fload_id,exc.ex_createtime,exc.ex_state,exc.ex_dealtime
-		from excep_change exc
-		where exc.ex_empid=#{username}
-		and
-		exc.ex_createtime between #{showStartTime} and #{showEndTime}
-		<if test="exceptionNum!=null and exceptionNum!=''">
-			and exc.fload_id=#{exceptionNum}
+		exc.fload_id,exc.ex_node,emp.emp_name,exc.ex_createtime
+		from excep_change exc,employee emp
+		where exc.ex_empid=emp.emp_id
+		and exc.ex_createtime between #{showStartTime} and #{showEndTime}
+		<if test="selectWho!=null and selectWho!=''">
+			and emp.emp_name=#{selectWho}
 		</if>
-		and exc.ex_state=#{exceptionState}
+		and exc.ex_node=#{ex_node}
+		order by exc.ex_createtime desc
+		limit
+		#{startShow},#{pageSize}
 	</select>
 
+	<select id="selectExceptionCount" resultType="Map" parameterType="java.util.Map">
+		select count(*)
+		from excep_change exc,employee emp
+		where exc.ex_empid=emp.emp_id
+		and exc.ex_createtime between #{showStartTime} and #{showEndTime}
+		<if test="selectWho!=null and selectWho!=''">
+			and emp.emp_name=#{selectWho}
+		</if>
+		and exc.ex_node=#{ex_node}
+	</select>
+	
+	<select id="selectEmpRole" resultType="Map" parameterType="java.util.Map">
+		select role.name
+		from employee emp,emp_role empr,role
+		where emp.emp_id=#{emp_id}
+		and emp.id=empr.employID
+		and empr.roleID=role.id
+	</select>
 
 </mapper>

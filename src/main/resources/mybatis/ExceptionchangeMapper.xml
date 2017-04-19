@@ -35,7 +35,7 @@
 		from excep_change
 		where ex_empid=#{username}
 		and
-		fload_id=#{foladNumber}
+		fload_id=#{fload_id}
 	</select>
 
 	<select id="selectChoiceExcep" resultType="Map" parameterType="java.util.Map">
@@ -83,6 +83,15 @@
 		rec.work_state='nowork'
 		and rec.show="true"
 	</select>
+	
+	
+	<delete id="deleteExceptionRecord">
+		delete
+		from excep_change
+		where ex_empid=#{username}
+		and fload_id=#{fload_idReq}
+	</delete>
+	
 
 
 

@@ -5,9 +5,11 @@
 	<select id="selectException" resultType="Map" parameterType="java.util.Map">
 		select
 		exc.fload_id,exc.ex_node,emp.emp_name,exc.ex_createtime
-		from excep_change exc,employee emp
+		from
+		excep_change exc,employee emp
 		where exc.ex_empid=emp.emp_id
-		and exc.ex_createtime between #{showStartTime} and #{showEndTime}
+		and
+		exc.ex_createtime between #{showStartTime} and #{showEndTime}
 		<if test="selectWho!=null and selectWho!=''">
 			and emp.emp_name=#{selectWho}
 		</if>
@@ -16,25 +18,68 @@
 		limit
 		#{startShow},#{pageSize}
 	</select>
-	
+
+	<select id="selectExceptionCount" resultType="Map"
+		parameterType="java.util.Map">
+		select count(*)
+		from excep_change exc,employee emp
+		where
+		exc.ex_empid=emp.emp_id
+		and exc.ex_createtime between #{showStartTime}
+		and #{showEndTime}
+		<if test="selectWho!=null and selectWho!=''">
+			and emp.emp_name=#{selectWho}
+		</if>
+		and exc.ex_node=#{ex_node}
+	</select>
+
 	<select id="selectEmpRole" resultType="Map" parameterType="java.util.Map">
 		select role.name
 		from employee emp,emp_role empr,role
-		where emp.emp_id=#{emp_id}
+		where
+		emp.emp_id=#{emp_id}
 		and emp.id=empr.employID
 		and empr.roleID=role.id
 	</select>
+
+	<update id="updatetExceptionDepState" parameterType="java.util.Map">
+		update
+		excep_change
+		set
+		ex_dealtime=#{date},dept_deal=#{reason},ex_node='depover'
+		where
+		fload_id=#{ExceptionFloadId}
+	</update>
+	<update id="updatetExceptionOffState" parameterType="java.util.Map">
+		update
+		excep_change
+		set
+		ex_dealtime=#{date},office_deal=#{reason},ex_node='offover'
+		where
+		fload_id=#{ExceptionFloadId}
+	</update>
+
+	<select id="selectListId" resultType="Map" parameterType="java.util.Map">
+		select
+		recd_id
+		from excep_change_det
+		where excep_id=#{ExceptionFloadId}
+	</select>
+
+	<update id="updatetExceptionRecord" parameterType="java.util.Map">
+		update
+		record
+		set work_state='normal'
+		where id=#{recd_id}
+	</update>
 	
 	<update id="updatetExceptionState" parameterType="java.util.Map">
-		update 
+		update
 		excep_change
-		<if test="roleName='off'">
-			set ex_dealtime=#{date},office_deal=#{reason},ex_node='off'
-		</if>
-		<if test="roleName='dep'">
-			set ex_dealtime=#{date},dept_deal=#{reason},ex_node='dep'
-		</if>
-		where fload_id=#{ExceptionFloadId}
+		set
+		ex_state=#{ex_state}
+		where
+		fload_id=#{ExceptionFloadId}
 	</update>
 
 

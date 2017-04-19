@@ -20,37 +20,49 @@ import com.sie.attend.common.bo.CommonBO;
 public class OverController {
 	@Resource(name = "commonBO")
 	private CommonBO commonBO;
+
 	
-	
-	
-	
-	//点击查询,异常申请触发
-	@RequestMapping(value = { "/getExceptionRecord" }, method = { RequestMethod.POST}, produces = { "application/json" })
-	public List<Map<String, Object>> getExceptionRecord(HttpServletRequest request) {
-		String exceptionNum = request.getParameter("exceptionNum");//查询异常的流水号
-		String showStartTime = request.getParameter("showStartTime");//查询异常申请的起始时间
-		String showEndTime = request.getParameter("showEndTime");//查询异常申请的结束时间
-		String exceptionState = request.getParameter("exceptionState");//要查询的异常状态
-		HttpSession session = request.getSession();// 获取用户信息
-		String username = (String) session.getAttribute("emp_id");	
-		//测试数据
-/*		String exceptionNum = null;
-		String showStartTime = "2017-04-07";
-		String showEndTime = "2017-04-18";
-		String exceptionState = "new";
-		String username = "123";*/
-		
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("username", username);
-		params.put("exceptionNum", exceptionNum);
+	@RequestMapping(value = { "/getOverException" }, method = { RequestMethod.GET }, produces = { "application/json" })
+	public Map<String, Object> getOverException(HttpServletRequest request) {
+		int showPage = 1;// 默认第一页
+		int pageSize = 5;// 默认显示5条记录
+		String showStartTime = request.getParameter("showStartTime");// 统一已办的开始接收时间
+		String showEndTime = request.getParameter("showEndTime");// 统一已办的结束接收时间
+		String selectWho = request.getParameter("selectWho");// 异常订单的发送人
+		HttpSession session = request.getSession();
+		String emp_id = (String) session.getAttribute("emp_id");
+		showPage = Integer.parseInt(request.getParameter("pageNumber"));// 当第几页
+		pageSize = Integer.parseInt(request.getParameter("pageSize"));// 每一页多少数据
+		int startShow = (showPage - 1) * pageSize;// 分页计算
+
+		Map<String, Object> resultMap = new HashMap<String, Object>(5);
+
+		// 判断用户的权限是那个
+		Map<String, Object> params = new HashMap<String, Object>(10);
+		params.put("emp_id", emp_id);
+		// 查询用户的角色是那个
+		Map<String, Object> empRole = this.commonBO.selectOne("com.sie.data.Over.selectEmpRole", params);// 查询结果封装到list集合中
+		if (empRole.get("name").equals("dep")) {
+			params.put("ex_node", "depover");// 部长显示部长审核完成的
+		} else if (empRole.get("name").equals("off")) {
+			params.put("ex_node", "offover");// 科室显示科室审核完成的
+		} else {
+			// 用户没有权限
+			resultMap.put("result", "你当前没有审核的权限");
+			return resultMap;
+		}
 		params.put("showStartTime", showStartTime);
 		params.put("showEndTime", showEndTime);
-		params.put("exceptionState", exceptionState);
-		List<Map<String, Object>> exceptionRecord = this.commonBO.selectList("com.sie.data.ExceptionRequest.selectException",params);// 查询结果封装到list集合中
-		System.out.println("exceptionRecord中的Map"+exceptionRecord);
-		return exceptionRecord;
+		params.put("selectWho", selectWho);
+		params.put("startShow", startShow);
+		params.put("pageSize", pageSize);
+		List<Map<String, Object>> DealException = this.commonBO.selectList("com.sie.data.Over.selectException", params);// 查询结果封装到list集合中
+		//查询总记录数
+		Map<String, Object> selectCount=this.commonBO.selectOne("com.sie.data.Over.selectExceptionCount",params);
+		resultMap.put("total", selectCount.get("count(*)".toString()));//返回总记录的条数
+		resultMap.put("rows", DealException);//返回list数据
+		return resultMap;
 	}
-	
 	
 	
 
