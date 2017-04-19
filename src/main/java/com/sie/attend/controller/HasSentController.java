@@ -26,18 +26,14 @@ public class HasSentController {
 	public Map<String, Object> gethasSent(HttpServletRequest request) {
 		int pageNumber = 1;// 默认第一页
 		int pageSize = 5;// 默认显示5条记录
-		
 		HttpSession session = request.getSession();
 		String emp_id = (String) session.getAttribute("emp_id");
 		pageNumber = Integer.parseInt(request.getParameter("pageNumber"));// 当第几页
 		pageSize = Integer.parseInt(request.getParameter("pageSize"));// 每一页多少数据
-		
 		//测试数据
 		//String emp_id="123";
-		
 		int startShow = (pageNumber - 1) * pageSize;// 分页计算
 		Map<String, Object> resultMap = new HashMap<String, Object>(5);
-		
 		Map<String, Object> params = new HashMap<String, Object>(5);
 		params.put("emp_id", emp_id);
 		params.put("startShow", startShow);
@@ -54,10 +50,13 @@ public class HasSentController {
 	@RequestMapping(value = { "/recallSent" }, method = { RequestMethod.POST }, produces = { "application/json" })
 	public Map<String, Object>  recallSent(HttpServletRequest request){
 		String ExceptionFloadId=request.getParameter("ExceptionFloadId");
+		HttpSession session = request.getSession();
+		String emp_id = (String) session.getAttribute("emp_id");
 		//测试数据
 		//String ExceptionFloadId="YCBG201704181727";
 		Map<String,Object> params=new HashMap<String,Object>();
 		params.put("ExceptionFloadId", ExceptionFloadId);
+		params.put("emp_id", emp_id);
 		Map<String, Object> resultMap=this.commonBO.selectOne("com.sie.data.HasSent.selectSentState",params);
 		return resultMap;
 	}
@@ -65,11 +64,14 @@ public class HasSentController {
 	@RequestMapping(value = { "/recall" }, method = { RequestMethod.POST }, produces = { "application/json" })
 	public Map<String, Object>  recall(HttpServletRequest request){
 		String ExceptionFloadId=request.getParameter("ExceptionFloadId");
+		HttpSession session = request.getSession();
+		String emp_id = (String) session.getAttribute("emp_id");
 		//测试数据
 		//String ExceptionFloadId="YCBG201704181727";
 		Map<String,Object> params=new HashMap<String,Object>();
 		params.put("ExceptionFloadId", ExceptionFloadId);
 		params.put("ex_state", "stop");
+		params.put("emp_id", emp_id);
 		int result=this.commonBO.updateOne("com.sie.data.HasSent.updatetExceptionState",params);
 		Map<String, Object> resultMap=new HashMap<String,Object>(3);
 		if(result!=0){

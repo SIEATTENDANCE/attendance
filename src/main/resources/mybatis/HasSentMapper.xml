@@ -28,6 +28,7 @@
 		from
 		excep_change
 		where fload_id=#{ExceptionFloadId}
+		and ex_empid=#{emp_id}
 	</select>
 	<update id="updatetExceptionState" parameterType="java.util.Map">
 		update
@@ -36,6 +37,7 @@
 		ex_state=#{ex_state}
 		where
 		fload_id=#{ExceptionFloadId}
+		and ex_empid=#{emp_id}
 	</update>
 
 </mapper>

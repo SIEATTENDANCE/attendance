@@ -48,7 +48,7 @@
     <url-pattern>/rest/*</url-pattern>
   </servlet-mapping>
   <!-- 验证码 -->
-<!--   <servlet>
+  <servlet>
     <display-name>CheckImgServlet</display-name>
     <servlet-name>CheckImgServlet</servlet-name>
     <servlet-class>com.sie.attend.util.CheckImgServlet</servlet-class>
@@ -56,6 +56,6 @@
   <servlet-mapping>
     <servlet-name>CheckImgServlet</servlet-name>
     <url-pattern>/CheckImgServlet</url-pattern>
-  </servlet-mapping> -->
+  </servlet-mapping>
   
 </web-app>
