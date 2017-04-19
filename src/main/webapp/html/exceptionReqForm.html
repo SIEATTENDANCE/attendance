@@ -9,12 +9,6 @@
 <!-- Bootstrap -->
 <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet"
 	media="screen">
-<!-- 导入日历插件css -->
-<link href="../bootstrap/css/bootstrap-datetimepicker.min.css"
-	rel="stylesheet" media="screen">
-<!-- 导入表格插件css -->
-<link href="../bootstrap/css/bootstrap-table.min.css" rel="stylesheet"
-	media="screen">
 <script src="../common/lib/html5.js"></script>
 <script src="../common/lib/respond.min.js"></script>
 <style type="text/css">
@@ -52,7 +46,9 @@ th {
 					</tr>
 					<tr>
 						<th height="45">附件管理</th>
-						<td></td>
+						<td>
+							<input type="file" value="上传附件">
+						</td>
 					</tr>
 					<tr>
 						<th height="70">科室审核</th>
@@ -64,7 +60,7 @@ th {
 					</tr>
 					<tr>
 						<th height="100">备注</th>
-						<td><textarea id = "remarkMess" placeholder="输入备注信息" cols="78" rows="4"></textarea></td>
+						<td><textarea id = "remarkMess" placeholder="输入备注信息" cols="73" rows="4"></textarea></td>
 					</tr>
 				</table>
 				<label class="col-md-3"></label>
@@ -72,16 +68,18 @@ th {
 					<button id="btn_add" type="button" class="btn btn-default">
 						<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>保存
 					</button>
-					<button id="btn_edit" type="button" class="btn btn-default">
+					<button id="btn_submit" type="button" class="btn btn-default">
 						<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>提交
 					</button>
-					<button id="btn_edit" type="button" class="btn btn-default">
-						<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>退回
+					<button id="btn_return" type="button" class="btn btn-default">
+						<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>撤回
 					</button>
-					<button id="btn_delete" type="button" class="btn btn-default">
+					<button id="btn_exit" type="button" class="btn btn-default">
 						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>关闭
 					</button>
 				</div>
+				<input type="hidden" id="roleName" />
+				<input type="hidden" id = "recoldId"/>
 			</div>
 		</div>
 	</div>
@@ -90,37 +88,251 @@ th {
 <script src="../bootstrap/jquery.min.js"></script>
 <script src="../bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript">
+var params = getParams();
+var haveRecoldId = '';
+var exceptionNum = "";
 $(function(){
-	var params = location.search; 
-	var exceptionNum = ""; 
-	if (params.indexOf("?") == -1) { 
+	if (params == null) { 
 		//如果是新增页面，则不加载数据
 	}else{
-		exceptionNum = params.substring(params.indexOf("=")+1);
-		document.getElementById("fload_id"). innerHTML = '编号：' + exceptionNum;
-		$.post("../rest/ExceptionRequest/editExceptionRecord", {
-			"exceptionNum" : exceptionNum
-		}, function(data) {
-			var html="";
-			var size = data.resultList.length;
+		rebackMess();
+	}
+	$('#addRecords').click(openAttendWindow);
+	$('#btn_add').click(function(){
+		var IdAndReason = getIdAndReason();
+		if(IdAndReason.length == 0){
+			alert("请选择异常记录");
+		}else{
+			$.post("../rest/ExceptionChange/addExceptionChange",
+				{"excepChange" : IdAndReason,
+				 "note" : $('#remarkMess').val(),
+				 "exceptionNum" : exceptionNum
+				},function(data){
+					alert(data.result);
+					document.getElementById("fload_id"). innerHTML = '编号：' + data.foladNumber;
+					exceptionNum = data.foladNumber;
+				}		
+			);
+		}
+	});
+	$('#btn_submit').click(function(){
+		if(exceptionNum==null){
+			alert('未保存的订单不能提交');
+		}else{
+			var value = $('#btn_submit').text().trim();
+			if(value == '提交'){ //员工提交异常订单
+				$.post("../rest/ExceptionChange/commitExceptionChange",{
+					"ExceptionFloadId" : exceptionNum
+				},function(data){
+					alert(data.result);
+					window.location.href="exceptionRequest.html";
+				});
+			}else{ //科室或部门审核异常订单
+				var opinion = "";
+				roleName = $('#roleName').val();
+				if(roleName =='off'){
+					opinion = $('#officeAdviceWrite').val();
+				}else{
+					opinion = $('#managerAdviceWrite').val();
+				}
+				$.post("../rest/Deal/passException",{
+					"ExceptionFloadId" : exceptionNum,
+					"opinion" : opinion,
+					"roleName" : roleName
+				},function(data){
+					if(data.result == '审核成功'){
+						alert(data.result);
+						window.location.href="exceptionUntreated.html";
+					}else{
+						alert(data.result);
+					}
+					
+				});
+			}
+		}
+		
+	});
+	$('#btn_return').click(function(){
+		if(exceptionNum==null){
+			alert('未提交的订单不能撤回');
+		}else{
+			var value = $('#btn_return').text().trim();
+			if(value == '撤回'){
+				$.post("../rest/ExceptionChange/stopExceptionChange",
+						{"ExceptionFloadId": exceptionNum},
+						function(data){
+							alert(data.result);
+						});
+			}else{
+				$.post("../rest/Deal/stopExceptionChange",
+					{"ExceptionFloadId": exceptionNum},
+					function(data){
+						alert(data.result);
+					});
+			}
+		}
+	});
+	$('#btn_exit').click(function(){
+		alert('退出该页面');
+		window.location.href="exceptionRequest.html";
+	})
+});
+//回显数据
+function rebackMess(){
+	exceptionNum = params['exceptionNum'];
+	action = params['action'];
+	document.getElementById("fload_id"). innerHTML = '编号：' + exceptionNum;
+	$.post("../rest/ExceptionDetail/editExceptionRecord", {
+		"exceptionNum" : exceptionNum
+	}, function(data) {
+		var html="";
+		var size = data.ExceptionRecordDetail.length;
+		$('#roleName').val(data.roleName);
+		if(data.roleName == 'emp'){
 			for(var i=0;i<size;i++){
-				html+="<tr><td>"+data.resultList[i].emp_id+"</td><td>"+data.resultList[i].emp_name+"</td><td>"+data.resultList[i].date+"</td><td>"+data.resultList[i].work_state+"</td><td><input type='text' class='reason' value='"+data.resultList[i].reason+"'</td></tr>";
+				if(haveRecoldId.length == 0){
+					haveRecoldId = data.ExceptionRecordDetail[i].id;
+				}else{
+					haveRecoldId = haveRecoldId + '*' + data.ExceptionRecordDetail[i].id;
+				}
+				if(data.ExceptionRecordDetail[i].recd_type == 'signin'){
+					data.ExceptionRecordDetail[i].recd_type = '签到';
+				}else{
+					data.ExceptionRecordDetail[i].recd_type = '签退';
+				}
+				switch(data.ExceptionRecordDetail[i].work_state){
+					case 'early' : data.ExceptionRecordDetail[i].work_state = '早退'; break;
+					case 'late' : data.ExceptionRecordDetail[i].work_state = '迟到'; break;
+					case 'nowork' : data.ExceptionRecordDetail[i].work_state = '旷工'; break;
+				}
+				html+="<tr><td>"+data.ExceptionRecordDetail[i].emp_id+"</td><td>"+data.ExceptionRecordDetail[i].emp_name+"</td><td>"+data.ExceptionRecordDetail[i].date+"</td><td>"+data.ExceptionRecordDetail[i].recd_type+"</td><td>"+data.ExceptionRecordDetail[i].work_state+"</td><td><input type='text' id='reason"+data.ExceptionRecordDetail[i].id+"' value='"+data.ExceptionRecordDetail[i].reason+"' size='6' ></td><td><input type='button' onclick='removeTr(this,"+data.ExceptionRecordDetail[i].id +")' value='删除'/></td></tr>";
 			}
 			$("#exceRecords").append(html);
-			if(data.resultMap.note != null){
-				document.getElementById("remarkMess"). innerHTML = data.resultMap.note;
+			//$('#remarkMess').val(data.ExceptionRecord.note);
+			if(data.ExceptionRecord.note != null){
+				document.getElementById("remarkMess"). innerHTML = data.ExceptionRecord.note;
 			}
-		});
+			document.getElementById("recoldId").value = haveRecoldId;
+		}else {
+			for(var i=0;i<size;i++){
+				if(data.ExceptionRecordDetail[i].recd_type == 'signin'){
+					data.ExceptionRecordDetail[i].recd_type = '签到';
+				}else{
+					data.ExceptionRecordDetail[i].recd_type = '签退';
+				}
+				switch(data.ExceptionRecordDetail[i].work_state){
+					case 'early' : data.ExceptionRecordDetail[i].work_state = '早退'; break;
+					case 'late' : data.ExceptionRecordDetail[i].work_state = '迟到'; break;
+					case 'nowork' : data.ExceptionRecordDetail[i].work_state = '旷工'; break;
+				}
+				html+="<tr><td>"+data.ExceptionRecordDetail[i].emp_id+"</td><td>"+data.ExceptionRecordDetail[i].emp_name+"</td><td>"+data.ExceptionRecordDetail[i].date+"</td><td>"+data.ExceptionRecordDetail[i].recd_type+"</td><td>"+data.ExceptionRecordDetail[i].work_state+"</td><td><input type='text' id='reason"+data.ExceptionRecordDetail[i].id+"' value='"+data.ExceptionRecordDetail[i].reason+"' size='6' readonly='readonly'></td></tr>";
+			}
+			$("#exceRecords").append(html);
+			if(data.ExceptionRecord.note != null){
+				document.getElementById("remarkMess"). innerHTML = data.ExceptionRecord.note;
+			}
+			document.getElementById("remarkMess").readOnly=true;//备注不可以修改
+			$('#addRecords').attr('disabled',"true"); //添加按钮不可以点击
+			$('#btn_add').hide();
+			$('#btn_submit').text('同意');
+			$('#btn_return').text('中止');
+			
+			if(data.roleName == 'off'){
+				if(data.ExceptionRecord.office_deal != null){
+					document.getElementById("officeAdvice").innerHTML = '<textarea id = "officeAdviceWrite"  cols=73 rows=4>'+data.ExceptionRecord.office_deal+'</textarea>';
+				}else{
+					document.getElementById("officeAdvice").innerHTML = '<textarea id = "officeAdviceWrite"  cols=73 rows=4></textarea>';
+				}
+			}else{
+				if(data.ExceptionRecord.office_deal != null){
+					document.getElementById("officeAdvice").innerHTML = '<textarea id = "officeAdviceWrite"  cols=73 rows=4>'+data.ExceptionRecord.office_deal+'</textarea>';
+				}else{
+					document.getElementById("officeAdvice").innerHTML = '<textarea id = "officeAdviceWrite"  cols=73 rows=4>'+'</textarea>';
+				}
+				document.getElementById("officeAdviceWrite").readOnly=true;//不可以修改
+				if(data.ExceptionRecord.dept_deal != null){
+					document.getElementById("managerAdvice"). innerHTML = '<textarea id = "managerAdviceWrite" cols=73 rows=4>'+data.ExceptionRecord.dept_deal+'</textarea>';
+				}else{
+					document.getElementById("managerAdvice"). innerHTML = '<textarea id = "managerAdviceWrite" cols=73 rows=4></textarea>';
+				}
+			}
+			if(action == 'treated'){
+				document.getElementById("officeAdviceWrite").readOnly=true;//不可以修改
+				if($('#managerAdviceWrite').length > 0){
+					document.getElementById("managerAdviceWrite").readOnly=true;
+				}
+				$('#toolbar').hide();
+			}
+		}
+	});
+}
+//删除行
+function removeTr(el, recordid){
+	var recordId = document.getElementById("recoldId")
+	var str = $("#recoldId").val();
+	var strs= new Array(); //定义一数组 
+	var newStr = '';
+	strs=str.split("*"); //字符分割 
+	//需要把这行的attendid删除
+	for (i=0;i<strs.length ;i++ ) { 
+		if(strs[i] == recordid) {
+			//alert("删掉这个");
+			continue;
+		}
+		if(newStr.length == 0) {
+			newStr = strs[i];
+		} else {
+			newStr = newStr + '*' + strs[i];　
+		}
 	}
-	
-	$('#addRecords').click(openAttendWindow);
-	
-	//打开子窗口,相关打卡列表
-	function openAttendWindow() {
-		var value = 
- 		window.open("exceptionRecord.html","noRepeat","top=150,left=350,width=700,height=400,menubar=yes,scrollbars=no,toolbar=yes,status=yes");
+	recordId.value = newStr;
+   	var row=el.parentNode.parentNode.rowIndex;
+   	document.getElementById('exceRecords').deleteRow(row);
+}
+//得到id和reason
+function getIdAndReason() {
+	//alert(document.getElementById("hiddenAttendid").value);
+	var str = $("#recoldId").val();
+	var strs= new Array(); //定义一数组 
+	var id_reason = '';
+	if(str.length == 0) {
+		return '';
 	}
-	
-});
+	//得到recoldid和每个id所对应的reason，用字符串串起来，扔给后台处理
+	strs=str.split("*"); //字符分割 
+	for (i=0;i<strs.length ;i++ ) 
+	{ 
+		//alert(strs[i]);
+		var reasonid = '#reason' + strs[i];
+		//alert($(reasonid).val());
+		if(i != strs.length-1) {
+			id_reason = id_reason + strs[i] + '&' + $(reasonid).val() + '-';
+		} else if (i == 0){
+			id_reason = strs[i] + '&' + $(reasonid).val();
+		} else {
+			id_reason = id_reason + strs[i] + '&' + $(reasonid).val();
+		}
+	} 
+	return id_reason;
+}
+//打开子窗口,相关打卡列表
+function openAttendWindow() {
+	var value = 
+		window.open("exceptionRecord.html","noRepeat","top=150,left=350,width=700,height=400,menubar=yes,scrollbars=no,toolbar=yes,status=yes");
+}
+function getParams() { 
+	var url = location.search; //获取url中"?"符后的字串 
+	var theRequest = new Object(); 
+	if (url.indexOf("?") == -1) { 
+		return null;
+	}else{
+		var str = url.substr(1); 
+		strs = str.split("&"); 
+		for(var i = 0; i < strs.length; i ++) { 
+			theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]); 
+		}
+	}
+	return theRequest;
+} 
 </script>
 </html>

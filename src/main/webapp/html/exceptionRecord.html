@@ -33,28 +33,59 @@
 <script src="../bootstrap/js/bootstrap-table.min.js"></script>
 <script src="../bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
 <script type="text/javascript">
-	$(function() {
-		tableInit();
-		$('#submit').click(function() {
-			var choiceRecordId = getIdSelections().toString();
-			alert('选择行：' + choiceRecordId);
-			$.post("../rest/test/testId", {
-				"choiceRecordId" : choiceRecordId
-			}, function(data) {
-				var html="";
-				var size = data.length;
-				for(var i=0;i<size;i++){
-					html+="<tr><td>"+data[i].emp_id+"</td><td>"+data[i].emp_name+"</td><td>"+data[i].date+"</td><td>"+data[i].work_state+"</td><td><input type='text' class='reason' value='"+data[i].reason+"'</td></tr>";
-				}
-				$("#exceRecords").append(html);
-				window.close();
-			});
-		});
-		$('#exit').click(function() {
-			window.close();
-		});
-
+$(function() {
+	tableInit();
+	$('#submit').click(function() {
+		var choiceRecordId = getIdSelections().toString();
+		if(choiceRecordId.length>0){
+			$.post("../rest/ExceptionChange/selectChoiceExcep",{"choiceRecordId" : choiceRecordId},
+					function(data) {
+						var html = "";
+						var size = data.length;
+						for (var i = 0; i < size; i++) {
+							if(haveRecoldId.length == 0){
+								haveRecoldId = data.ExceptionRecordDetail[i].id;
+							}else{
+								haveRecoldId = haveRecoldId + '*' + data.ExceptionRecordDetail[i].id;
+							}
+							if(data[i].rectype == 'signin'){
+								data[i].rectype = '签到';
+							}else{
+								data[i].rectype = '签退';
+							}
+							switch(data[i].workstate){
+								case 'early' : data[i].workstate = '早退'; break;
+								case 'late' : data[i].workstate = '迟到'; break;
+								case 'nowork' : data[i].workstate = '旷工'; break;
+							}
+							html += "<tr><td>"
+									+ data[i].empid
+									+ "</td><td>"
+									+ data[i].empname
+									+ "</td><td>"
+									+ data[i].recdate
+									+ "</td><td>"
+									+ data[i].rectype
+									+ "</td><td>"
+									+ data[i].workstate
+									+ "</td><td>"
+									+"<input type='text' id='reason"+data[i].id+"' size='6'>"
+									+"</td><td>"
+									+"<input type='button' onclick='removeTr(this,"+data[i].id +")' value='删除'/>"
+									+"</td></tr>";
+						}
+						window.opener.$('#exceRecords').append(html);
+						window.close();
+					});
+		}else{
+			alert("请选择一条记录");
+		}
 	});
+	$('#exit').click(function() {
+		window.close();
+	});
+
+});
 
 	//表格初始化
 	var tableInit = function() {
@@ -70,12 +101,19 @@
 			pageSize : 5, //数据条数
 			pageList : [ 2, 5, 10, 20 ],
 			clickToSelect : true, //是否启用点击选中行
-			sidePagination : 'client', //服务器分页
-			sortName : "recdate", //根据日期进行排序
-			sortOrder : "desc",
+			sidePagination : 'server', //服务器分页
 			dataType : 'json', //服务器返回的数据类型
 			queryParamsType : 'undefined', //设置为 'limit' 则会发送符合 RESTFul 格式的参数，必须包含offset,limit
 			//设置为'undefined'，则可以发pageNumber，pageSize等参数
+			queryParams : function(params) {
+				var params = {
+					pageNumber : params.pageNumber,
+					pageSize : params.pageSize,
+					sortName : "recdate", //根据日期进行排序
+					sortOrder : "desc",
+				}
+				return params;
+			},
 			columns : [ {
 				checkbox : true
 			}, {

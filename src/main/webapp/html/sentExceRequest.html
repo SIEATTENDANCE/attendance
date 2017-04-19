@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+<title>异常申请管理</title>
+<!-- Bootstrap -->
+<link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet"
+	media="screen">
+<!-- 导入表格插件css -->
+<link href="../bootstrap/css/bootstrap-table.min.css" rel="stylesheet"
+	media="screen">
+<script src="../common/lib/html5.js"></script>
+<script src="../common/lib/respond.min.js"></script>
+</head>
+<body>
+	<div class="container">
+		<h2>已发送申请列表</h2>
+		<hr style="background-color: red; height: 1px">
+		<table id="cusTable" ></table>
+	</div>
+</body>
+<script src="../bootstrap/jquery.min.js"></script>
+<script src="../bootstrap/js/bootstrap.min.js"></script>
+<!-- 导入表格插件 -->
+<script src="../bootstrap/js/bootstrap-table.min.js"></script>
+<script src="../bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	//创建表格
+	$('#cusTable').bootstrapTable({
+	    url: '../rest/HasSent/gethasSent', //服务器数据的加载地址
+	    method:'post', //服务器数据的请求方式
+	    cache:false, //禁用 AJAX 数据缓存
+	    contentType:'application/x-www-form-urlencoded', //发送到服务器的数据编码类型
+	    striped: true, //隔行变色效果
+	    pagination:true, //在表格底部显示分页条
+	    pageNumber: 1, //页码
+	    pageSize: 5, //数据条数
+	    pageList:[2,5,10,20],
+	    sidePagination:'server', //服务器分页
+	    dataType:'json', //服务器返回的数据类型
+	    queryParamsType:'undefined', //设置为 'limit' 则会发送符合 RESTFul 格式的参数，必须包含offset,limit
+	    							 //设置为'undefined'，则可以发pageNumber，pageSize等参数
+	    queryParams:function(params) {
+	    	var params = {
+	    			pageNumber: params.pageNumber,
+	    			pageSize: params.pageSize,
+	    			sortName: "recdate", //根据日期进行排序
+	    			sortOrder: "desc",
+	    	}
+	    	return params;
+	    },
+	    columns : [{
+	    	title : '申请编号',
+	    	formatter : function(value,row,index){
+	    		return index+1;
+	    	}
+	    }, {
+			field : 'fload_id',
+			title : '异常单号'
+		}, {
+			field : 'ex_node',
+			title : '状态',
+			formatter : function(value,row,index){
+				if(value=='new'){
+					value = '科室负责人审批';
+				}
+				return value;
+			}
+		}, {
+			title : '操作',
+			formatter: function(value,row,index){
+				value ='<a href="withdrawnExceRequest.html?ExceptionFloadId='+row.fload_id+'">查看已发送任务</a>';
+				return value;
+			}
+		}]
+		
+	});
+});
+</script>
+</html>

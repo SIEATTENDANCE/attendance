@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+<title>异常申请管理</title>
+<!-- Bootstrap -->
+<link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet"
+	media="screen">
+<!-- 导入表格插件css -->
+<link href="../bootstrap/css/bootstrap-table.min.css" rel="stylesheet"
+	media="screen">
+<script src="../common/lib/html5.js"></script>
+<script src="../common/lib/respond.min.js"></script>
+</head>
+<body>
+	<div class="container">
+		<h2>待撤回任务</h2>
+		<hr style="background-color: red; height: 1px">
+		<table id="cusTable" ></table>
+		<button id="btn_retrun" class="btn btn-default" type="button">撤回申请</button>
+	</div>
+</body>
+<script src="../bootstrap/jquery.min.js"></script>
+<script src="../bootstrap/js/bootstrap.min.js"></script>
+<!-- 导入表格插件 -->
+<script src="../bootstrap/js/bootstrap-table.min.js"></script>
+<script src="../bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	var params = location.search; 
+	var ExceptionFloadId = ""; 
+	if (params.indexOf("?") == -1) { 
+		alert('该异常订单不存在');
+		window.location.href= 'sentExceRequest.html';
+	}
+	ExceptionFloadId = params.substring(params.indexOf("=")+1);
+	tableInit(ExceptionFloadId);
+	$('#btn_retrun').click(function(){
+		$.post("../rest/HasSent/recall",{"ExceptionFloadId" : ExceptionFloadId},
+			function(data){
+				if(data.result == '撤回成功'){
+					alert(data.result);
+					window.location.href='sentExceRequest.html';
+				}else{
+					alert(data.result);
+				}
+			}
+		);
+	});
+	
+});
+var tableInit = function(ExceptionFloadId){
+	//创建表格
+	$('#cusTable').bootstrapTable({
+	    url: '../rest/HasSent/recallSent', //服务器数据的加载地址
+	    method:'post', //服务器数据的请求方式
+	    cache:false, //禁用 AJAX 数据缓存
+	    contentType:'application/x-www-form-urlencoded', //发送到服务器的数据编码类型
+	    striped: true, //隔行变色效果
+	    sortName: "recdate", //根据日期进行排序
+		sortOrder: "desc",
+	    dataType:'json', //服务器返回的数据类型
+	    responseHandler : function(res){
+	    	var array = new Array();
+	    	array[0] = res;
+	    	res = array;
+	    	return res;
+	    },
+	    queryParamsType:'undefined', //设置为 'limit' 则会发送符合 RESTFul 格式的参数，必须包含offset,limit
+	    							 //设置为'undefined'，则可以发pageNumber，pageSize等参数
+	    queryParams:function(params) {
+	    	var params = {
+	    		ExceptionFloadId : ExceptionFloadId
+	    	}
+	    	return params;
+	    },
+	    columns : [ {
+	    	radio : true
+	    }, {
+	    	title : '任务编号',
+	    	formatter : function(value,row,index){
+	    		return index+1;
+	    	}
+	    }, {
+			field : 'ex_node',
+			title : '当前环节名称',
+			formatter : function(value,row,index){
+				if(value=='new'){
+					value = '科室负责人审批';
+				}
+				return value;
+			}
+		}, {
+			field : 'ex_createtime',
+			title : '任务创建时间'
+		}, {
+			title : '工作任务状态',
+			formatter: function(value,row,index){
+				value ='运行中';
+				return value;
+			}
+		}, {
+			title : '任务处理人',
+			formatter: function(value,row,index){
+				value ='科室负责人';
+				return value;
+			}
+		}]
+	});
+}
+//获取选择行的流水单号
+function getIdSelections() {
+     return $.map($('#cusTable').bootstrapTable('getSelections'), function(row) {
+         return row.fload_id;
+     });
+ }
+</script>
+</html>

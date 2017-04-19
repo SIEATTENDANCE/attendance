@@ -84,17 +84,17 @@
 	  初始化加载
 	 */
 	$(function() {
-		var params = location.search; 
+		/* var params = location.search; 
 		var emp_id = ""; 
 		if (params.indexOf("?") != -1) { 
 			emp_id = params.substring(params.indexOf("=")+1);
-		}
+		} */
 		
-		$.post("../rest/login/getEmpMess", {"emp_id":emp_id}, function(data) {
+		$.post("../rest/login/getEmpMess", function(data) {
 			$('#emp_name').text(data.emp_name);
 		});
 
-		$.post("../rest/login/getMenuMess", {"emp_id":emp_id}, function(data) {
+		$.post("../rest/login/getMenuMess", function(data) {
 			initMenu(data, $(".side-menu"));
 			$(".side-menu > li").addClass("menu-item");
 		});
@@ -147,7 +147,6 @@
 				}
 			} else {
 				var second_menu_url = '#menu-child-'+ item.parentNode;
-				//alert(second_menu_url);
 				str = "<li><a href='"+item.url+"'><i class='icon-font'>"
 					+ icon + "</i><span>" + item.menuName + "</span></a></li>";
 				$(second_menu_url).append(str);
