@@ -5,9 +5,85 @@
 		select time1,time2,time3,time4 from real_time 
 	</select>
 	
+	<select id="selectByCondition" parameterType="java.util.Map" resultType="java.util.Map">
+		select emp.id,emp.emp_id empId,emp.emp_name empName,o.off_name offName,re.comefrom comeFrom,dep.dep_name depName
+		from employee emp,office o,record re,department dep
+		where emp.emp_offid=o.id and o.dep_id=dep.id and emp.emp_id=re.emp_id
+		<choose>
+          <when test="emp_name!=null and off_name=null and dep_name=null">
+          and emp.emp_name =#{emp_name}
+          </when>
+          <when test="off_name!=null and emp_name=null and dep_name=null">
+          and o.off_name =#{off_name}
+          </when>
+          <when test="dep_name!=null and emp_name=null and off_name=null">
+          and dep.dep_name =#{dep_name} 
+          </when>
+          </choose>
+         order by emp.id asc
+         limit
+		#{startShow},#{pageSize}
+	</select>
+	<select id="selectCount" parameterType="java.util.Map" resultType="java.util.Map">
+		select count(*)
+		from employee emp,office o,record re,department dep
+		where emp.emp_offid=o.id and o.dep_id=dep.id and emp.emp_id=re.emp_id
+		<choose>
+          <when test="emp_name!=null">
+          and emp.emp_name =#{emp_name}
+          </when>
+          <when test=" off_name!=null ">
+          and o.off_name =#{off_name}
+          </when>
+          <!-- <otherwise> -->
+          <when test="dep_name!=null">
+          and dep.dep_name =#{dep_name} 
+          </when>
+          <!-- </otherwise> -->
+          <!-- <when test="emp_name!=null and off_name!=null and dep_name=null">
+          and emp.emp_name =#{emp_name} and o.off_name =#{off_name}
+          </when>
+          <when test="emp_name!=null and off_name=null and dep_name!=null">
+          and emp.emp_name =#{emp_name} and dep.dep_name =#{dep_name}
+          </when>
+          <otherwise>
+          and o.off_name =#{off_name} and dep.dep_name =#{dep_name}
+          </otherwise>  -->
+         </choose>
+	</select>
 	<update id="setLockTime"  parameterType="map">
 		update real_time 
-		set
-		time1 =#{time1},time2 =#{time2},time3 =#{time3},time4 =#{time4}
+		<set>
+			<if test="time1 !=null">
+				time1 =#{time1},
+			</if>
+			<if test="time2 !=null">
+				time2 =#{time2},
+			</if>
+			<if test="time3 !=null">
+				time3 =#{time3},
+			</if>
+			<if test="time4 !=null">
+				time4 =#{time4},
+			</if>
+		</set>
 	</update>
+	
+	<update id="setLockMethod"  parameterType="map">
+		update record set comefrom=#{comefrom} 
+		<!-- where emp_id=#{emp_id} -->
+		where emp_id=#{emp_id}
+		<!-- <foreach collection="map" item="emp_id" index="index" open= "(" close =")" separator=",">
+			#{emp_id}
+		</foreach> -->
+	</update>
+	
+	<select id="getAllDept" resultType="map">
+		select id,dep_name from department
+	</select>
+	
+	<select id="getAllOffice" resultType="java.util.Map">
+		select id,off_name from office
+	</select>
+	
 </mapper>

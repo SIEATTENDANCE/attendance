@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>打卡方式设置</title>
+<link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+
+</head>
+<body>
+	<div class="container">
+		<h2 align="center">打卡方式设置（管理员）</h2>
+		<hr style="background-color: red; height: 1px">
+		<div id="queryForm" style="padding-bottom:5px;">
+	       <span>姓名:</span>
+	       <input type="text" id="empName"/>
+	       <span>所属部门:</span>
+	       <select id="department" style="width:150px;" >
+	       <option value="-1">请选择部门...</option>
+	       </select>         
+	       <span>所属科室:</span>
+	       <select id="office" style="width:150px;" >
+	       <option value="-1">请选择科室...</option>
+	       </select>
+	       <input type="button" value="查找" id="search" />
+	       <input type="button" value="设置" id="edit"/>
+	       <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"> 
+	       <div class="modal-dialog" role="document">  
+	       <div class="modal-content">  
+	       <div class="modal-header">   
+	       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	       <span aria-hidden="true">×</span></button>   
+	       <h4 class="modal-title" id="myModalLabel">设置</h4>  
+	       </div>  
+	       <div class="modal-body">
+	       <div class="form-group" id="parent">
+	       <input type="radio" checked="checked" name="method" value="machine" />打卡机
+	       <input type="radio" name="method" value="system" />系统  
+	       </div>  
+	       </div>  
+	       <div class="modal-footer">   
+	       <button type="button" class="btn btn-default" data-dismiss="modal">
+	       <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>关闭</button>   
+	       <button type="button" id="btn_submit" class="btn btn-primary" data-dismiss="modal">
+	       <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>提交</button>  
+	       </div>  
+	       </div> 
+	       </div> 
+	       </div>
+    	</div>
+		<table id="cusTable"></table>
+	</div>
+</body>
+<script src="../bootstrap/jquery.min.js"></script>
+<script src="../bootstrap/js/bootstrap.min.js"></script>
+<script src="../bootstrap/js/bootstrap-datetimepicker.min.js"></script>
+<script src="../bootstrap/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="../bootstrap/js/bootstrap-table.min.js"></script>
+<script src="../bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+<script>
+var selectContent=[];
+var empId;
+$table=$('#cusTable');
+$(function(){
+	$(document).ready(function() {
+		getAllDept();
+		getAllOffice();
+	    //当点击查询按钮的时候执行  
+	    $("#search").bind("click", initTable);
+	   
+	    $("#edit").click(function () { 
+	    	var selectContent = $table.bootstrapTable('getSelections');
+	     	var empId = $.map(selectContent,function(row){
+	     		return row.empId;
+	     	});
+	     	/* alert(empId); */
+	        if(typeof(selectContent) == 'undefined') {  
+	            alert('请选择一列数据!');  
+	            return false;  
+	        }else{  
+	            $("#myModalLabel").text("设置"); 
+		    	$('#myModal').modal();
+		    	edit(empId);
+	        }
+	    });	
+	})
+})
+	function edit(empId){
+		$('#btn_submit').on('click',function(){
+	    	var comeFrom = $('#parent input[name="method"]:checked').val();
+	    	/* alert(comeFrom);
+	    	alert(empId); */
+			$.ajax({
+				url:"../rest/admin/setLockMethod",
+				type:"POST",
+				data:{
+					empId:empId.toString(),
+					comeFrom:comeFrom,
+				},
+				datatype:"json",
+				success:function(data){
+		        	if(data.success=='yes'){
+		        		/* toastr.info(data.data); */
+		        		alert("success");
+		        		
+		        	}
+		        }   
+			});
+		});
+}
+	function getAllDept(){
+		$.ajax({
+			url:"../rest/admin/getAllDept",	
+			type:"POST",
+			datatype:JSON,
+			success:function(data){
+			$.each(data,function(name,value){ 
+				/* alert(value.deptid);  */
+				$("#department").append("<option id="+value.id+" value="+value.dep_name+">"+value.dep_name+"</option>");
+			})
+			}
+		})
+}
+	function getAllOffice(){
+		$.ajax({
+			url:"../rest/admin/getAllOffice",	
+			type:"POST",
+			datatype:JSON,
+			success:function(data){
+			$.each(data,function(name,value){ 
+				$("#office").append("<option id="+value.id+" value="+value.off_name+">"+value.off_name+"</option>");
+			})
+			} 
+		})
+}
+
+	//初始化表格
+	function initTable() {
+		//先销毁表格  
+		$('#cusTable').bootstrapTable('destroy');
+		//初始化表格,动态从服务器加载数据  
+		$("#cusTable").bootstrapTable({
+			url : '../rest/admin/queryLockMethod', //请求后台的URL
+			method:'post', //服务器数据的请求方式
+		    cache:false, //禁用 AJAX 数据缓存
+		    contentType:'application/x-www-form-urlencoded', //发送到服务器的数据编码类型
+		    toolbar:'#edit',
+		    singleSelect:true,// 单选checkbox 
+		    pagination:true, //在表格底部显示分页条
+		    pageNumber: 1, //页码
+		    pageSize: 5, //数据条数
+		    pageList:[2,5,10,20],
+		    showColumns: true, //是否显示所有的列
+		    minimumCountColumns: 3, //最少允许的列数
+		    showRefresh:true, //是否显示刷新按钮
+		    sidePagination:'server', //服务器分页
+		    dataType:'json', //服务器返回的数据类型
+			columns : [{
+			    checkbox : true
+			},{
+				field : 'empId',
+				title : '序号'
+	        },{
+				field : 'empName',
+				title : '姓名'
+			}, {
+				field : 'offName',
+				title : '所属部门'
+			}, {
+				field : 'depName',
+				title : '所属机构'
+			}, {
+				field : 'comeFrom',
+				title : '打卡方式'
+			} ],
+			queryParamsType : "undefined",
+			queryParams : function queryParams(params) { //设置查询参数  
+				var param = {
+					pageNumber: params.pageNumber,
+		    		pageSize: params.pageSize,
+					empName : $('#empName').val(),
+					offName : $('#office').val(),
+					depName : $('#department').val(),
+				};
+				return param;
+			}
+		});
+	};
+</script>
+</html>
+
+

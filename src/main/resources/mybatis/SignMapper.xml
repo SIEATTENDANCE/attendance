@@ -6,7 +6,7 @@
 	<select id="SelectAllSignByUser" resultType="Map" parameterType="java.util.Map">
 		select emp.emp_id empid,emp.emp_name empname,rec.recd_type rectype,
 		rec.date recdate,rec.time rectime,rec.work_state
-		workstate,rec.comefrom recfrom
+		workstate,rec.comefrom recfrom,rec.real_time
 		from employee emp,record rec
 		where
 		emp.emp_id=rec.emp_id

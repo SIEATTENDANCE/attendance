@@ -42,11 +42,12 @@ $(function() {
 					function(data) {
 						var html = "";
 						var size = data.length;
+						var haveRecoldId = window.opener.$('#recoldId').val();
 						for (var i = 0; i < size; i++) {
 							if(haveRecoldId.length == 0){
-								haveRecoldId = data.ExceptionRecordDetail[i].id;
+								haveRecoldId = data[i].id;
 							}else{
-								haveRecoldId = haveRecoldId + '*' + data.ExceptionRecordDetail[i].id;
+								haveRecoldId = haveRecoldId + '*' + data[i].id;
 							}
 							if(data[i].rectype == 'signin'){
 								data[i].rectype = '签到';
@@ -74,6 +75,7 @@ $(function() {
 									+"<input type='button' onclick='removeTr(this,"+data[i].id +")' value='删除'/>"
 									+"</td></tr>";
 						}
+						window.opener.$('#recoldId').val(haveRecoldId);
 						window.opener.$('#exceRecords').append(html);
 						window.close();
 					});

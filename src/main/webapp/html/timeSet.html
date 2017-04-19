@@ -16,7 +16,7 @@
 	
 	<div class="container">
 		<h2>工作时间设置(管理员)</h2>
-		<hr style="background-color: red; height: 1px">
+		<hr>
 		<div class="row">
 					<div class=" col-md-6">
 			<table class="table">
@@ -87,7 +87,7 @@ $(document).ready(function(){
 			}else if(t3>=t4){
 				alert("时间T3必须小于T4");
 			}else{
-				$.post("../admin/setLockTime",
+				$.post("../rest/admin/setLockTime",
 					{time1:t1,time2:t2,time3:t3,time4:t4},
 					function(data){
 						if(data.result==1){
