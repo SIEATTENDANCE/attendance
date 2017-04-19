@@ -20,12 +20,12 @@ import com.sie.attend.common.bo.CommonBO;
 public class OverController {
 	@Resource(name = "commonBO")
 	private CommonBO commonBO;
-
 	
-	@RequestMapping(value = { "/getOverException" }, method = { RequestMethod.GET }, produces = { "application/json" })
+	@RequestMapping(value = { "/getOverException" }, method = { RequestMethod.POST }, produces = { "application/json" })
 	public Map<String, Object> getOverException(HttpServletRequest request) {
 		int showPage = 1;// 默认第一页
 		int pageSize = 5;// 默认显示5条记录
+		
 		String showStartTime = request.getParameter("showStartTime");// 统一已办的开始接收时间
 		String showEndTime = request.getParameter("showEndTime");// 统一已办的结束接收时间
 		String selectWho = request.getParameter("selectWho");// 异常订单的发送人
@@ -33,9 +33,16 @@ public class OverController {
 		String emp_id = (String) session.getAttribute("emp_id");
 		showPage = Integer.parseInt(request.getParameter("pageNumber"));// 当第几页
 		pageSize = Integer.parseInt(request.getParameter("pageSize"));// 每一页多少数据
+		
 		int startShow = (showPage - 1) * pageSize;// 分页计算
-
 		Map<String, Object> resultMap = new HashMap<String, Object>(5);
+		
+/*		//测试数据
+		String showStartTime="2017-04-01";
+		String showEndTime="2017-04-20";
+		String emp_id="222";
+		String selectWho=null;
+		*/
 
 		// 判断用户的权限是那个
 		Map<String, Object> params = new HashMap<String, Object>(10);

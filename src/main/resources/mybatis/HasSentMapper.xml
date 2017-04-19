@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sie.data.HasSent">
+	<select id="selectHasSentRecord" resultType="Map" parameterType="java.util.Map">
+		select
+		fload_id,ex_node
+		from
+		excep_change
+		where ex_empid=#{emp_id}
+		and ex_state='commit'
+		and ex_node='new'
+		limit
+		#{startShow},#{pageSize}
+	</select>
+
+	<select id="selectHasSentCount" resultType="Map"  parameterType="java.util.Map">
+		select count(*)
+		from
+		excep_change
+		where ex_empid=#{emp_id}
+		and ex_state='commit'
+		and ex_node='new'
+	</select>
+	<select id="selectSentState" resultType="Map" parameterType="java.util.Map">
+		select
+		ex_node,ex_createtime
+		from
+		excep_change
+		where fload_id=#{ExceptionFloadId}
+	</select>
+	<update id="updatetExceptionState" parameterType="java.util.Map">
+		update
+		excep_change
+		set
+		ex_state=#{ex_state}
+		where
+		fload_id=#{ExceptionFloadId}
+	</update>
+
+</mapper>
