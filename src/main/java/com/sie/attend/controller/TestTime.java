@@ -38,7 +38,7 @@ public class TestTime {
 		
 		
 		
-/*		String excepChange="12&你好-13&很好-18&非常好";
+		String excepChange="12&-13&-18&";
 		
 		String exId=null;
 		String exReason=null;
@@ -47,13 +47,17 @@ public class TestTime {
 			//System.out.println(id_reasons[i]);
 			String[] idAndreason=id_reasons[i].split("&");
 				exId=idAndreason[0];
-				exReason=idAndreason[1];
+				if(idAndreason.length<2){
+					exReason="";
+				}else{
+					exReason=idAndreason[1];
+				}
 				System.out.println("分割出来后的数据"+exId+":"+exReason);
 		}
-		*/
-		String exceptionNum="[\"YCBG20170410002\"]";
 		
-		System.out.println(exceptionNum.substring(2, exceptionNum.length()-2));
+/*		String exceptionNum="[\"YCBG20170410002\"]";
+		
+		System.out.println(exceptionNum.substring(2, exceptionNum.length()-2));*/
 		
 		
 		

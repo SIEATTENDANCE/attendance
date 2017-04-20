@@ -1,17 +1,25 @@
 package com.sie.attend.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import org.apache.ibatis.javassist.bytecode.analysis.MultiArrayType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.sie.attend.common.bo.CommonBO;
 import com.sie.attend.util.FloadNumber;
 
@@ -28,32 +36,40 @@ public class ExceptionChangeController {
 	private CommonBO commonBO;
 
 	// 添加异常变更申请,点击保存触发
-	@RequestMapping(value = { "/addExceptionChange" }, method = { RequestMethod.GET }, produces = {
+	@RequestMapping(value = { "/addExceptionChange" }, method = { RequestMethod.POST }, produces = {
 			"application/json" })
-	public Map<String, Object> addExceptionChange(HttpServletRequest request) {
+	public Map<String, Object> addExceptionChange(HttpServletRequest request,MultipartFile pictureFile) throws Exception, IOException {
 		SimpleDateFormat dateStyle = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat TimeStyle = new SimpleDateFormat("HH:mm:ss");
 		String date = dateStyle.format(new Date());
 		String time = TimeStyle.format(new Date());
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-
+		String excepChange = request.getParameter("excepChange");// 获取到的是要申请的异常串,操作明细表
+		String exc_cha_id =null;// 获取附件的地址,操作附件表
+		String note = request.getParameter("note");// 获取备注信息
+		HttpSession session = request.getSession();// 获取用户信息
+		String username = (String) session.getAttribute("emp_id");
+		//进行图片上传
+		System.out.println("图片："+pictureFile);
+		if(pictureFile!=null && pictureFile.getOriginalFilename()!=null && pictureFile.getOriginalFilename().length()>0){
+			//图片上传成功后，将图片的地址写到数据库
+			String filePath = "E:\\pic\\";
+			//上传文件原始名称
+			String originalFilename = pictureFile.getOriginalFilename();
+			//新的图片名称
+			String newFileName = UUID.randomUUID() +originalFilename.substring(originalFilename.lastIndexOf("."));
+			//新文件
+			File file = new java.io.File(filePath+newFileName);
+			//将内存中的文件写入磁盘
+			pictureFile.transferTo(file);
+			//图片上传成功，将新图片地址写入数据库
+			exc_cha_id=newFileName;
+		}
+		System.out.println("图片地址："+exc_cha_id);
 		/*
-		 * String
-		 * excepChange=request.getParameter("excepChange");//获取到的是要申请的异常串,操作明细表
-		 * 
-		 * //String exc_cha_id =
-		 * request.getParameter("exc_cha_id");//获取附件的地址,操作附件表
-		 * 
-		 * String note = request.getParameter("note");//获取备注信息 HttpSession
-		 * session = request.getSession();// 获取用户信息 String username = (String)
-		 * session.getAttribute("emp_id");
+		 * // 测试数据 String excepChange = "1&原因1-2&原因2-3&原因3"; String username =
+		 * "123"; String note = "写入备注信息";
 		 */
-
-		// 测试数据
-		String excepChange = "1&原因1-2&原因2-3&原因3";
-		String username = "123";
-		String note = "写入备注信息";
-
 		String foladNumber = FloadNumber.getFloadNumber(date, time);// 得到一个流水号
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("fload_id", foladNumber);
@@ -75,13 +91,16 @@ public class ExceptionChangeController {
 		}
 
 		String foladNumberReq = request.getParameter("foladNumber");
+		//得到流水号
+		System.out.println(foladNumberReq);
 		if (!(null == foladNumberReq || "".equals(foladNumberReq))) {
-			params.put("fload_idReq", foladNumberReq);
+			params.put("ExceptionFloadId", foladNumberReq);
 			Map<String, Object> ifRecordExit2 = this.commonBO.selectOne("com.sie.data.ExceptionChange.ifRecordExit",
 					params);
 			if (!(ifRecordExit2.get("count(*)").toString().equals("0"))) {
 				// 删除原来的数据;
 				this.commonBO.deleteOne("com.sie.data.ExceptionChange.deleteExceptionRecord", params);
+				this.commonBO.deleteOne("com.sie.data.ExceptionChange.deleteExceptionDetail", params);
 			}
 		}
 
@@ -96,7 +115,11 @@ public class ExceptionChangeController {
 			// System.out.println(id_reasons[i]);
 			String[] idAndreason = id_reasons[i].split("&");
 			exId = idAndreason[0];
-			exReason = idAndreason[1];
+			if(idAndreason.length<2){
+				exReason="";
+			}else{
+				exReason=idAndreason[1];
+			}
 			System.out.println("分割出来后的数据" + exId + " : " + exReason);
 			params.put("exId", exId);
 			params.put("exReason", exReason);

@@ -170,10 +170,7 @@
 				//checkbox: true
 			},{
 				field : 'fload_id',
-				title : '异常单号',
-				formatter:function(value,row,index){
-					return '异常申请单';
-				}
+				title : '异常单号'
 			}, {
 				field : 'ex_node',
 				title : '处理环节',
@@ -182,10 +179,10 @@
 					case 'new':
 						value = '待审';
 						break;
-					case 'office':
-						value = '科审完';
+					case 'offover':
+						value = '科室审完';
 						break;
-					case 'over':
+					case 'depover':
 						value = '审核完成';
 						break;
 					}

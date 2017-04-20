@@ -64,9 +64,8 @@
 					<li><a href="#">全部</a></li>
 				</ul>
 			</div>
-			&nbsp;&nbsp;&nbsp;
-			<button class="btn btn-default" type="submit" id="submit">查询</button>
 		</form>
+		<button class="btn btn-default" type="submit" id="submit">查询</button>
 		<!-- 表格 -->
 		<table id="cusTable"></table>
 	</div>
@@ -141,6 +140,7 @@
 		    cache:false, //禁用 AJAX 数据缓存
 		    contentType:'application/x-www-form-urlencoded', //发送到服务器的数据编码类型
 		    striped: true, //隔行变色效果
+		    toolbar : '#submit',
 		    pagination:true, //在表格底部显示分页条
 		    pageNumber: 1, //页码
 		    pageSize: 5, //数据条数

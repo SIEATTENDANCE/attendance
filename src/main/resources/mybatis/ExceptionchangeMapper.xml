@@ -27,15 +27,13 @@
 		#{startShow},#{pageSize}
 	</select>
 
-
-
 	<select id="ifRecordExit" resultType="Map" parameterType="java.util.Map">
 		select
 		count(*)
 		from excep_change
 		where ex_empid=#{username}
 		and
-		fload_id=#{fload_id}
+		fload_id=#{ExceptionFloadId}
 	</select>
 
 	<select id="selectChoiceExcep" resultType="Map" parameterType="java.util.Map">
@@ -55,7 +53,6 @@
 		from excep_change
 		where fload_id=#{ExceptionFloadId}
 	</select>
-
 
 	<update id="updatetExceptionState" parameterType="java.util.Map">
 		update
@@ -80,19 +77,20 @@
 		where
 		rec.emp_id=#{username}
 		and
-		rec.work_state='nowork'
+		rec.work_state!='normal'
 		and rec.show="true"
 	</select>
-	
-	
 	<delete id="deleteExceptionRecord">
 		delete
 		from excep_change
 		where ex_empid=#{username}
-		and fload_id=#{fload_idReq}
+		and fload_id=#{ExceptionFloadId}
 	</delete>
-	
-
-
+	<delete id="deleteExceptionDetail">
+		delete
+		from excep_change_det
+		where emp_id=#{username}
+		and excep_id=#{ExceptionFloadId}
+	</delete>
 
 </mapper>

@@ -26,6 +26,7 @@ th {
 			<div align="center" id="fload_id">编号：</div>
 			<label class="col-md-2"></label>
 			<div class="col-md-8">
+			<form  enctype="multipart/form-data"> 
 				<table border="1" class="table table-bordered" id="">
 					<tr>
 						<th width="140" height="70;">考勤记录变更</th>
@@ -63,6 +64,7 @@ th {
 						<td><textarea id = "remarkMess" placeholder="输入备注信息" cols="73" rows="4"></textarea></td>
 					</tr>
 				</table>
+				</form>
 				<label class="col-md-3"></label>
 				<div id="toolbar" class="btn-group btn-group-lg">
 					<button id="btn_add" type="button" class="btn btn-default">
@@ -106,7 +108,7 @@ $(function(){
 			$.post("../rest/ExceptionChange/addExceptionChange",
 				{"excepChange" : IdAndReason,
 				 "note" : $('#remarkMess').val(),
-				 "exceptionNum" : exceptionNum
+				 "foladNumber" : exceptionNum
 				},function(data){
 					alert(data.result);
 					document.getElementById("fload_id"). innerHTML = '编号：' + data.foladNumber;
@@ -116,7 +118,7 @@ $(function(){
 		}
 	});
 	$('#btn_submit').click(function(){
-		if(exceptionNum==null){
+		if(exceptionNum==""){
 			alert('未保存的订单不能提交');
 		}else{
 			var value = $('#btn_submit').text().trim();

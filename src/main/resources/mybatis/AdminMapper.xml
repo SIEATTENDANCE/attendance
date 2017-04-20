@@ -9,7 +9,16 @@
 		select emp.id,emp.emp_id empId,emp.emp_name empName,o.off_name offName,re.comefrom comeFrom,dep.dep_name depName
 		from employee emp,office o,record re,department dep
 		where emp.emp_offid=o.id and o.dep_id=dep.id and emp.emp_id=re.emp_id
-		<choose>
+		<if test="emp_name!=''">
+			and emp.emp_name =#{emp_name} 
+		</if>
+		<if test="off_name!='-1'">
+			and o.off_name =#{off_name}
+		</if>
+		<if test="dep_name!='-1'">
+			and dep.dep_name =#{dep_name}
+		</if>
+<!-- 		<choose>
           <when test="emp_name!=null and off_name=null and dep_name=null">
           and emp.emp_name =#{emp_name}
           </when>
@@ -19,7 +28,7 @@
           <when test="dep_name!=null and emp_name=null and off_name=null">
           and dep.dep_name =#{dep_name} 
           </when>
-          </choose>
+          </choose> -->
          order by emp.id asc
          limit
 		#{startShow},#{pageSize}
@@ -28,17 +37,26 @@
 		select count(*)
 		from employee emp,office o,record re,department dep
 		where emp.emp_offid=o.id and o.dep_id=dep.id and emp.emp_id=re.emp_id
-		<choose>
+		<if test="emp_name!=''">
+			and emp.emp_name =#{emp_name} 
+		</if>
+		<if test="off_name!='-1'">
+			and o.off_name =#{off_name}
+		</if>
+		<if test="dep_name!='-1'">
+			and dep.dep_name =#{dep_name}
+		</if>
+		<!-- <choose>
           <when test="emp_name!=null">
           and emp.emp_name =#{emp_name}
           </when>
           <when test=" off_name!=null ">
           and o.off_name =#{off_name}
           </when>
-          <!-- <otherwise> -->
+          <otherwise>
           <when test="dep_name!=null">
           and dep.dep_name =#{dep_name} 
-          </when>
+          </when> -->
           <!-- </otherwise> -->
           <!-- <when test="emp_name!=null and off_name!=null and dep_name=null">
           and emp.emp_name =#{emp_name} and o.off_name =#{off_name}
@@ -48,8 +66,8 @@
           </when>
           <otherwise>
           and o.off_name =#{off_name} and dep.dep_name =#{dep_name}
-          </otherwise>  -->
-         </choose>
+          </otherwise>  
+         </choose>-->
 	</select>
 	<update id="setLockTime"  parameterType="map">
 		update real_time 
