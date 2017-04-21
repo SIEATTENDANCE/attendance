@@ -1,91 +1,157 @@
-﻿<!DOCTYPE html>
-<html lang="zh-CN">
+<!DOCTYPE html>
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="GENERATOR" content="MSHTML 11.00.9600.17496">
-<TITLE>登录页面</TITLE>
-<link href="../common/css/login.css" rel="stylesheet" type="text/css">
+<meta charset="utf-8"/>
+<title>登录界面</title>
+
+<link href="images/all.css" type="text/css" rel="stylesheet" media="all" />
+<!--[if ie]><link rel="stylesheet" type="text/css" href="images/index_ie.css"  media="all" /><![endif]-->
+<script type="text/javascript" src="js/jquery-1.8.2.min.js" ></script>
 </head>
 
-<BODY>
-	<DIV class="top_div"></DIV>
-	<DIV
-		style="background: rgb(255, 255, 255); margin: -100px auto auto; border: 1px solid rgb(231, 231, 231); border-image: none; width: 400px; height: 220px; text-align: center;">
-		<DIV style="width: 165px; height: 96px; position: absolute;">
-			<DIV class="tou"></DIV>
-			<DIV class="initial_left_hand" id="left_hand"></DIV>
-			<DIV class="initial_right_hand" id="right_hand"></DIV>
-		</DIV>
-		<P style="padding: 30px 0px 10px; position: relative;">
-			<SPAN class="u_logo"></SPAN> <INPUT class="ipt" id="username"
-				type="text" placeholder="请输入员工编号">
-		</P>
-		<P style="position: relative;">
-			<SPAN class="p_logo"></SPAN> <INPUT class="ipt" id="password"
-				type="password" placeholder="请输入密码">
-		</P>
+<body>
 
-		<P style="position: relative; left: -11px">
+<header>
+<div class="head">
+	<div class="wrapper">
+        <div class="logo"><!--这里插入Img标签大小188*60px--></div>
+        <div class="menu">
+            <a href="" id="menu1">产品中心</a>
+            <span>|</span>
+            <a href="" id="menu2">个性化解决方案</a>
+            <span>|</span>
+            <a href="" id="menu3">360度产品服务</a>
+            <span>|</span>
+            <a href="" id="menu4">客服论坛</a>
+            <span>|</span>
+        </div>
+    </div>
+</div>
+</header>
+
+
+<div class="banner_area" id="banner_list">
+  	<div class="main_box">
+    	<div class="main_cont">
+        	<div class="wrapper">
+            <dl class="xl_info clearfix">
+                <dt class="hide">登录</dt>
+                <dd><input type="text" class="srh" id="username"></dd>
+                <dd><input type="password" class="srh" id="password"></dd>
+                <dd><input id="btn" class="button white radius4 dl" type="button" value="登录" /></dd>
+                <dd><input class="button blue radius4 shenqing" type="button" value="立即申请" />
+				<input class="button blue radius4 lj" type="button" value="咨询了解" /></dd>
+            </dl>
+ <!--            <P style="position: relative; left: -11px">
 			<input id="randomCode" class="ipt" style="width: 145px" type="text"
 				placeholder="请输入验证码"> <span
 				style="position: relative; left: 10px; top: 12px"><img
 				id="vimg" title="点击更换" onclick="changeCode();"
 				src="../CheckImgServlet"></span>
-		</P>
+		</P> -->
+            
+            
+    		</div>
+            <div class="bg"></div>
+		</div>
 
-		<DIV
-			style="height: 60px; line-height: 50px; margin-top: 10px; border-top-color: rgb(231, 231, 231); border-top-width: 1px; border-top-style: solid;">
-			<P style="margin: 0px 35px 20px 45px;">
-				<span id="errorMessage"></span>
-				<SPAN style="float: right;"> <A id="btn"
-					style="background: rgb(0, 142, 173); padding: 7px 10px; border-radius: 4px; border: 1px solid rgb(26, 117, 152); border-image: none; color: rgb(255, 255, 255); font-weight: bold;"
-					href="#">登录</A>
-				</SPAN>
-			</P>
-		</DIV>
-	</DIV>
-	<div style="text-align: center;"></div>
-</BODY>
-<script src="../common/lib/jquery-1.9.0.min.js"></script>
+    </div>
+  	<div class="banner_box banner_ui on on_delay">
+    	<div class="banner_cont">
+        	<div class="area">
+                <p class="ban1_anim_txt">360°企业管理信息化</p>
+                <div class="ban1_anim_bg"></div>
+            </div>
+        </div>
+    </div>
+    <div class="banner_box banner_logo">
+    	<div class="banner_cont">
+        	<div class="area">
+                <p class="ban2_anim_txt">超越,本应如此</p>
+                <div class="ban2_anim_bg_logo"></div>
+                <div class="ban2_anim_bg_line"></div>
+                <div class="ban2_icon_1"><span></span></div>
+                <div class="ban2_icon_2"><span class="s1"></span><span class="s2"></span></div>
+                <div class="ban2_icon_3"><span></span></div>
+            </div>
+        </div>
+    </div>
+    <div class="banner_box banner_lighting">
+    	<div class="banner_cont">
+        	<div class="area">
+            	<div class="ban3_act_bg"></div>
+                <div class="ban3_mask"></div>
+                <p class="ban3_anim_txt png">超越,本应如此</p>
+                <div class="ban3_anim_bg_lightning"></div>
+                <div class="ban3_anim_bg_boom"></div>
+                <div class="ban3_anim_bg_boom_icon_l"></div>
+                <div class="ban3_anim_bg_boom_icon_r"></div>
+            </div>
+        </div>
+    </div>
+  </div>
+ <div class="status" id="status">
+  	<span class="on"></span>
+    <span></span>
+    <span></span>
+  </div> 
+  
+  
+  <div class="index-bottom">
+  
+  	<div class="fg-line"><b></b><span>特色功能介绍</span><b></b></div>
+    
+    <div class="clearfix part">
+        <div class="text fl">
+            <div class="title">
+            	<span class="fl">01</span>
+                <p>拥有强大的调图参数</p>
+                <p class="small">POWERFUL ADJUSTMENT PARAMETERS</p>
+            </div>
+            <p class="nr">拥有自动曝光、数码补光、白平衡、亮度对比度、饱和度、色阶、曲线、色彩平衡等一系列非常丰富的调图参数。最新开发的版本，对UI界面进行全新设计，拥有更好的视觉享受，且操作更流畅，更简单易上手。无需PS，您也能调出完美的光影色彩。</p>
+        </div>
+        <div class="pic fr">
+        	<img src="images/info01.jpg" >
+        </div>
+    </div>
+    
+	<!--------------------------------------分割线-------------------------------------->    
+    <div class="h-line"></div>
+    
+    <div class="clearfix part">
+        
+        <div class="pic fl">
+        	<img src="images/info02.jpg" >
+        </div>
+        <div class="text fr">
+            <div class="title">
+            	<span class="fl">02</span>
+                <p>丰富的数码暗房特效</p>
+                <p class="small">DIGITAL DARKROOM EFFECTS</p>
+            </div>
+            <p class="nr">还在羡慕他人多变的照片风格吗？没关系，光影魔术手拥有多种丰富的数码暗房特效，如Lomo风格、背景虚化、局部上色、褪色旧相、黑白效果、冷调泛黄等，让您轻松制作出彩的照片风格，特别是反转片效果，光影魔术手最重要的功能之一，可得到专业的胶片效果。</p>
+        </div>
+        
+    </div>
+  </div>
+  
+<footer>
+<div class="foot">
+	<p>合作下载站点</p>
+    <p class="font14"><a href="">PCHOME</a>|<a href="">PCONLINE</a></p>
+</div>
+</footer>
+<script src="js/all.js"  type="text/javascript"></script>
+</body>
 <SCRIPT type="text/javascript">
 
 	function changeCode() {
 		var imgNode = document.getElementById("vimg");
 		imgNode.src = "../CheckImgServlet?t=" + Math.random();
-	}
-
+	}	
+	
 	$(function() {
-		//得到焦点
-		$("#password").focus(function() {
-			$("#left_hand").animate({
-				left : "150",
-				top : " -38"
-			}, {
-				step : function() {
-					if (parseInt($("#left_hand").css("left")) > 140) {
-						$("#left_hand").attr("class", "left_hand");
-					}
-				}
-			}, 2000);
-			$("#right_hand").animate({
-				right : "-64",
-				top : "-38px"
-			}, {
-				step : function() {
-					if (parseInt($("#right_hand").css("right")) > -70) {
-						$("#right_hand").attr("class", "right_hand");
-					}
-				}
-			}, 2000);
-		});
-		//失去焦点
-		$("#password").blur(function() {
-			$("#left_hand").attr("class", "initial_left_hand");
-			$("#left_hand").attr("style", "left:100px;top:-12px;");
-			$("#right_hand").attr("class", "initial_right_hand");
-			$("#right_hand").attr("style", "right:-112px;top:-12px");
-		});
-		
+	
 		/*监听输入框的回车操作*/  
 		$(document).keyup(function(e){
    			if (e.keyCode == 13) 
@@ -94,7 +160,6 @@
        	 		$("#btn").click()
     		}
 		});
-		
 		$("#btn").click(function() {
 			$.post("../rest/login/getLoginMess.do", {
 				username : $('#username').val(),
@@ -111,4 +176,6 @@
 		});
 	});
 </SCRIPT>
-</HTML>
+
+
+</html>

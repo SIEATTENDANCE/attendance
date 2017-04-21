@@ -26,7 +26,6 @@ th {
 			<div align="center" id="fload_id">编号：</div>
 			<label class="col-md-2"></label>
 			<div class="col-md-8">
-			<form  enctype="multipart/form-data"> 
 				<table border="1" class="table table-bordered" id="">
 					<tr>
 						<th width="140" height="70;">考勤记录变更</th>
@@ -40,7 +39,7 @@ th {
 									<td>状态</td>
 									<td>变更原因</td>
 									<td><input type="image" src="../common/image/add.jpg"
-										width="25" height="20" id="addRecords"/></td>
+										width="25" height="20" id="addRecords" /></td>
 								</tr>
 							</table>
 						</td>
@@ -48,23 +47,27 @@ th {
 					<tr>
 						<th height="45">附件管理</th>
 						<td>
-							<input type="file" value="上传附件">
+							<form enctype="multipart/form-data">
+								<input type="file" value="上传附件">
+							</form>
 						</td>
 					</tr>
+
 					<tr>
 						<th height="70">科室审核</th>
-						<td><div id = "officeAdvice" ></div></td>
+						<td><div id="officeAdvice"></div></td>
 					</tr>
 					<tr>
 						<th height="70">部门审核</th>
-						<td><div id = "managerAdvice" ></div></td>
+						<td><div id="managerAdvice"></div></td>
 					</tr>
 					<tr>
 						<th height="100">备注</th>
-						<td><textarea id = "remarkMess" placeholder="输入备注信息" cols="73" rows="4"></textarea></td>
+						<td><textarea id="remarkMess" placeholder="输入备注信息" cols="73"
+								rows="4"></textarea></td>
 					</tr>
 				</table>
-				</form>
+
 				<label class="col-md-3"></label>
 				<div id="toolbar" class="btn-group btn-group-lg">
 					<button id="btn_add" type="button" class="btn btn-default">
@@ -80,8 +83,8 @@ th {
 						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>关闭
 					</button>
 				</div>
-				<input type="hidden" id="roleName" />
-				<input type="hidden" id = "recoldId"/>
+				<input type="hidden" id="roleName" /> <input type="hidden"
+					id="recoldId" />
 			</div>
 		</div>
 	</div>

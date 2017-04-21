@@ -34,12 +34,13 @@ public class LoginController {
 		// 获取页面传回的用户名、密码、验证码
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
-		String checkCode = request.getParameter("CheckImg");
+		//String checkCode = request.getParameter("CheckImg");
 		//获取session中的验证码，用于和前台传回的验证码比较
 		HttpSession session = request.getSession();
-		checkCode = (String) session.getAttribute("checkcode_session");//关闭session
-		String _checkCode = (String) session.getAttribute("checkcode_session");
-		
+	/*	String checkCode = (String) session.getAttribute("checkcode_session");//关闭session
+		String _checkCode = (String) session.getAttribute("checkcode_session");*/
+		String checkCode="now";
+		String _checkCode="now";
 //		System.out.println("requese:"+checkCode);
 //		System.out.println("sesion:"+_checkCode);
 		
